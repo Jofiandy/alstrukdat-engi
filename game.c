@@ -87,7 +87,7 @@ void readKey(){
                             state = STATE_NAME;
                             break;
                         case OPTION_START:
-                            if (name == "")
+                            if (name[0] == 0)
                                 state = STATE_NAME;
                             else
                                 state = STATE_GAME;
@@ -112,8 +112,7 @@ void readKey(){
                 state = STATE_MENU;
             break;
         case STATE_LOAD:
-            ;
-            len = strlen(name_load);
+            ; len = strlen(name_load);
             if (strcmp(name_load, not_found) == 0){
                 state = STATE_MENU;
                 emptyString(name_load);
