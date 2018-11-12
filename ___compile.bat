@@ -1,0 +1,1 @@
+gcc game.c key.c -o "Engi's Kitchen"
