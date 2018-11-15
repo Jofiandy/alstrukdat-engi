@@ -2,7 +2,6 @@
 
 #include "boolean.h"
 #include "matriks.h"
-//#include "mesinkata.h"
 //#include "mesinkar.h"
 #include <stdio.h>
 
