@@ -17,6 +17,7 @@ boolean IsEmpty (Queue Q){
 		return false;
 	}
 }
+
 boolean IsFull (Queue Q){
 /* Mengirim true jika tabel penampung elemen Q sudah penuh */
 /* yaitu mengandung elemen sebanyak MaxEl */
@@ -92,11 +93,3 @@ void Del (Queue * Q, infotype * X){
 	 	else Head(*Q)++;
 	 }
 }
-
-void delPatience (Queue * Q,int interval){
-	while(SelisihJam(JamSekarang - InfoHead(*Q)) > interval && !IsEmpty(*Q)){
-		Del(*Q,*X)
-		nilai--;
-	}
-}
-
