@@ -1,1 +1,1 @@
-gcc game.c key.c -o "Engi's Kitchen"
+gcc bin\*.c -o "Engi's Kitchen"

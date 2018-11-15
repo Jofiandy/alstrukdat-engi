@@ -2,8 +2,8 @@
 
 #include "boolean.h"
 #include "matriks.h"
-#include "mesinkata.h"
-#include "mesinkar.h"
+//#include "mesinkata.h"
+//#include "mesinkar.h"
 #include <stdio.h>
 
 /* ********** DEFINISI PROTOTIPE PRIMITIF ********** */              
@@ -64,7 +64,8 @@ void CopyMATRIKS (MATRIKS MIn, MATRIKS * MHsl) {
 4 5 6
 8 9 10 
 */
-void BacaMATRIKS (MATRIKS * M, int NB, int NK) {
+
+/*void BacaMATRIKS (MATRIKS * M, int NB, int NK) {
 	MakeMATRIKS(NB, NK, &(*M));
 	for (int i=GetFirstIdxBrs(*M); i<=GetLastIdxBrs(*M); i++)
 		for (int j=GetFirstIdxKol(*M); j<=GetLastIdxKol(*M); j++){
@@ -72,7 +73,8 @@ void BacaMATRIKS (MATRIKS * M, int NB, int NK) {
 			while (CC=='\n') ADV();
 			Elmt(*M, i, j) = CC;
 		}
-}
+}*/
+
 /* I.S. M terdefinisi */
 /* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
    dipisahkan sebuah spasi */
