@@ -49,10 +49,10 @@ IdxType GetLastIdx (TabChar T);
 
 /* ********** TEST KOSONG/PENUH ********** */
 /* *** Test tabel kosong *** */
-boolean IsEmpty (TabChar T);
+boolean IsEmptyArr (TabChar T);
 /* Mengirimkan true jika tabel T kosong, mengirimkan false jika tidak */
 /* *** Test tabel penuh *** */
-boolean IsFull (TabChar T);
+boolean IsFullArr (TabChar T);
 /* Mengirimkan true jika tabel T penuh, mengirimkan false jika tidak */
 
 /* ********** TULIS dengan INPUT/OUTPUT device ********** */

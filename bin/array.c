@@ -38,11 +38,11 @@ IdxType GetLastIdx (TabChar T)
 //     return Elmt(T, Neff(T));
 // }
 
-boolean IsEmpty (TabChar T)
+boolean IsEmptyArr (TabChar T)
 {
     return (NbElmt(T) == 0);
 }
-boolean IsFull (TabChar T)
+boolean IsFullArr (TabChar T)
 {
     return (GetLastIdx(T) == MaxNbEl(T));
 }
@@ -63,7 +63,7 @@ IdxType Search (TabChar T, ElType X)
 {
 	int i;
 	boolean found =  true;
-	if (IsEmpty(T))
+	if (IsEmptyArr(T))
 	{
 		return IdxUndef;
 	}
