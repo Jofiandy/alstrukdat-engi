@@ -97,7 +97,7 @@ void BacaMATRIKS (MATRIKS * M, char * namafile) {
 void TulisMATRIKS (MATRIKS M) {
 	for (int i=GetFirstIdxBrs(M); i<=GetLastIdxBrs(M); i++) {
 		for (int j=GetFirstIdxKol(M); j<=GetLastIdxKol(M); j++) {
-			if(j!=GetLastIdxKol(M)) printf("%d ", Elmt(M, i, j));
+			if(j!=GetLastIdxKol(M)) printf("%c ", Elmt(M, i, j));
 			else printf("%c", Elmt(M, i, j));
 		}
 		if(i!=GetLastIdxBrs(M)) printf("\n");
