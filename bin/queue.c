@@ -17,6 +17,7 @@ boolean IsEmptyQue (Queue Q){
 		return false;
 	}
 }
+
 boolean IsFullQue (Queue Q){
 /* Mengirim true jika tabel penampung elemen Q sudah penuh */
 /* yaitu mengandung elemen sebanyak MaxEl */
@@ -92,4 +93,3 @@ void DelQue (Queue * Q, infotypeQue * X){
 	 	else HeadQue(*Q)++;
 	 }
 }
-
