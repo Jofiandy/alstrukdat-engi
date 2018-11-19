@@ -93,3 +93,13 @@ void DelQue (Queue * Q, infotypeQue * X){
 	 	else HeadQue(*Q)++;
 	 }
 }
+
+void TulisFileQue (Queue Q,FILE *f){
+	infotypeQue X;
+	while(!IsEmptyQue){
+		DelQue (&Q,&X);
+		fprintf(f,"%d ",X.id);
+		TulisFileJam(X.Jam,f);
+		fprintf(f,"\n");
+	}
+}

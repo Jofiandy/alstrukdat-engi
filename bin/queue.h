@@ -71,4 +71,6 @@ void DelQue (Queue * Q, infotypeQue * X);
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer; 
         Q mungkin kosong */
 
+void TulisFileQue (Queue Q,FILE *f);
+		
 #endif
