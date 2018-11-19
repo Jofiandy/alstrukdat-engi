@@ -2,7 +2,8 @@
 
 #ifndef MATRIKS_H
 #define MATRIKS_H
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "boolean.h"
 
 /* Ukuran minimum dan maksimum baris dan kolom */
@@ -65,6 +66,9 @@ void BacaMATRIKS (MATRIKS * M, char * namafile);
 4 5 6
 8 9 10 
 */
+
+void TulisFileMatriks(MATRIKS M,FILE *f);
+
 void TulisMATRIKS (MATRIKS M);
 /* I.S. M terdefinisi */
 /* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 

@@ -7,6 +7,8 @@
 #ifndef ADTJAMTUBES_H
 #define ADTJAMTUBES_H
 
+#include <stdio.h>
+
 /* Definisi Struct Waktu (D	H:M:S) */
 typedef struct{
 	int H;
@@ -61,5 +63,7 @@ void TulisWaktu(Waktu Time);
 	FS		: Nilai komponen jam dari Time tertulis dalam format H:M:S dan hari dari waktu dalam format D-D(nilai D)
 	Proses	: Menuliskan satu per satu komponen jam ke layar dalam format H:M:S dan menampilkan komponen hari dalam D-D(nilai D)
 */
+
+void TulisFileJam(Waktu Time, FILE *f);
 
 #endif

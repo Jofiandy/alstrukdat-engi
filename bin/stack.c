@@ -78,3 +78,12 @@ void PrintStack(Stack S)
 		printf("%s", str);
 	}
 }
+
+void TulisFileStack(Stack S,FILE *f){
+	char str[105];
+	while (!(IsEmptySta(S)))
+	{
+		Pop(&S,&str);
+		fprintf(f,"%s\n", str);
+	}
+}

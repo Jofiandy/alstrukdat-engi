@@ -80,3 +80,8 @@ void TulisWaktu(Waktu Time)
 {
 	printf("Day-%d\tCurrent time: %d:%d:%d\n",Day(Time),Hour(Time),Min(Time),Sec(Time));
 }
+
+void TulisFileJam(Waktu Time, FILE *f){
+	fprintf(f, "%d %d %d %d", Day(Time), Hour(Time),Min(Time), Sec(Time));
+	fprintf(f,"\n");
+}

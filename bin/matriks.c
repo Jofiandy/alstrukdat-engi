@@ -1,9 +1,8 @@
-// Nama / NIM	: Faiz Muhammad Muflich / 13517093
-
 #include "boolean.h"
 #include "matriks.h"
 #include "mesinkar.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /* ********** DEFINISI PROTOTIPE PRIMITIF ********** */              
 /* *** Konstruktor membentuk MATRIKS *** */
@@ -83,6 +82,15 @@ void BacaMATRIKS (MATRIKS * M, char * namafile) {
 	NBrsEff(*M) = nb;
  	NKolEff(*M) = nk;
 	
+}
+
+void TulisFileMatriks(MATRIKS M, FILE *f){
+	for(int i = GetFirstIdxBrs(M);i<=GetLastIdxBrs(M);i++){
+		for(int j = GetFirstIdxKol(M);j<=GetLastIdxKol(M);j++){
+			fprintf(f, "%c", M.Mem[i][j]);
+		}
+		fprintf(f,"\n");
+	}
 }
 
 /* I.S. M terdefinisi */

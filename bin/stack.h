@@ -8,6 +8,8 @@
 #define ADTSTACK_H
 #define IdxMax 10
 
+#include <stdio.h>
+
 typedef char Infotype[105];
 typedef int address;
 
@@ -55,5 +57,7 @@ void PrintStack(Stack S);
 	I.S	: Stack terdefinisi dan tidak kosong
 	F.S	: Seluruh isi stack tercetak di layar
 */
+
+void TulisFileStack(Stack S,FILE *f);
 
 #endif

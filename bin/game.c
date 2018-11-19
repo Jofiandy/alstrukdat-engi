@@ -26,7 +26,7 @@ typedef struct {
 	teleport tp[5][16][16];
 } graph;
 
-void initTp(graph * g){
+void initTp(graph * g){ //File Teleport
 	FILE * gf = fopen("./src/g.txt","r");
 	for (int i = 0; i < 5; i++)
 		for (int j = 0; j < 16; j++)
@@ -141,6 +141,7 @@ void checkLoad(){
     
     if (file = fopen(fname, "r")){
         // TODO - Overwrite/load savegame data with file
+		
         fclose(file);
         strcpy(name, name_load);
         state = STATE_MENU;

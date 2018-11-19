@@ -1,1 +1,1 @@
-gcc bin\*.c -o "Engi's Kitchen"
+gcc D:\Hanif\Education\Semester3\Algoritma\tubes\bin\*.c -o "Engi's Kitchen"

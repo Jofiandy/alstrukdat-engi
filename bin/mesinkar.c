@@ -1,4 +1,4 @@
-/* File: mesinkar.c */
+/* Fil22e: mesinkar.c */
 /* Implementasi Mesin Karakter */
 
 #include "mesinkar.h"
