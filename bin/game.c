@@ -2,6 +2,8 @@
 #include<string.h>
 #include<stdlib.h>
 #include "key.h"
+#include "matriks.h"
+#include "point.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
@@ -13,21 +15,107 @@
 #define OPTION_LOAD 2
 #define OPTION_EXIT 3
 
+/* fjiodsjiofjioafjsijfaisjifas temporary */
+
+typedef struct {
+	int to;
+	POINT pto;
+} teleport;
+
+typedef struct {
+	teleport tp[5][16][16];
+} graph;
+
+void initTp(graph * g){
+	FILE * gf = fopen("./src/g.txt","r");
+	for (int i = 0; i < 5; i++)
+		for (int j = 0; j < 16; j++)
+			for (int k = 0; k < 16; k++){
+				g->tp[i][j][k].to = -1;
+				g->tp[i][j][k].pto = MakePOINT(-1,-1);
+			}
+	
+	int x[6];
+	while (fscanf(gf, "%d", &x[0]) == 1){
+		for (int i = 1; i < 6; i++)
+			fscanf(gf, "%d", &x[i]);
+		g->tp[x[0]][x[1]][x[2]].to = x[3];
+		g->tp[x[0]][x[1]][x[2]].pto = MakePOINT(x[4], x[5]);
+	}
+	fclose(gf);
+}
+
+graph g;
+/* -----dsaijisjdajjakdkjasjkdljladjlkasd---- */
+
 const char *not_found = "Player name not found, press any key to go back";
 const char *opt[] = {" New Game"," Start   "," Load    "," Exit    "};
 
 int state, option;
 char name[100], name_load[100];
 
+int current_room;
+MATRIKS room[5], gameRoom;
+POINT p_pos;
+
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
         s[i] = 0;
 }
 
+void newSave(){
+	p_pos = MakePOINT(7, 7);
+	current_room = 1;
+	for (char c = '1'; c <= '4'; c++){
+		char src[] = "./src/1.txt";
+		src[6] = c;
+		BacaMATRIKS(&room[c - '0'], src);
+	}
+	initTp(&g); // temporary
+}
+
 void firstSetup(){
+	
     emptyString(name);
     state = STATE_MENU;
     option = OPTION_NEW;
+
+}
+
+void keyGame(char key){
+	
+	if (key == KEY_UP){
+		if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')
+			Absis(p_pos)--;
+	} else if (key == KEY_DOWN){
+		if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')
+			Absis(p_pos)++;
+	} else if (key == KEY_RIGHT){
+		if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')
+			Ordinat(p_pos)++;
+	} else if (key == KEY_LEFT){
+		if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')
+			Ordinat(p_pos)--;
+	} else if (key == KEY_ESC){
+		exit(0);
+	}
+	
+}
+
+void printGame(){
+	
+	if (g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)].to != -1){
+		teleport tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
+		current_room = tmp.to;
+		p_pos = tmp.pto;
+	}
+	CopyMATRIKS(room[current_room], &gameRoom);
+	Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'O';
+	
+	printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
+	TulisMATRIKS(gameRoom);
+	printf("\n");
+	
 }
 
 void printLine(){
@@ -67,28 +155,24 @@ void readKey(){
         case STATE_MENU:
             switch(key){
                 case KEY_UP:
-                    if (option == OPTION_NEW)
-                        option = OPTION_EXIT;
-                    else
-                        option--;
+					option = (option + 4 - 1) % 4;
                     break;
                 case KEY_DOWN:
-                    if (option == OPTION_EXIT)
-                        option = OPTION_NEW;
-                    else
-                        option++;
+					option = (option + 4 + 1) % 4;
                     break;
                 case KEY_ENTER:
                     switch(option){
                         
                         case OPTION_NEW:
-                            // TODO - Overwrite savegame data with new savegame
+                            newSave();
                             emptyString(name);
                             state = STATE_NAME;
                             break;
                         case OPTION_START:
-                            if (name[0] == 0)
+                            if (name[0] == 0){
+								newSave();
                                 state = STATE_NAME;
+							}
                             else
                                 state = STATE_GAME;
                             break;
@@ -125,6 +209,9 @@ void readKey(){
                     checkLoad();
             }
             break;
+		case STATE_GAME:
+			keyGame(key);
+			break;
     }
 }
 
@@ -152,11 +239,16 @@ void printOption(){
             strcat(input, "_");
             printCenter(input);
             break;
+		case STATE_GAME:
+			printf("\n");
+			printGame();
+			printf("\n");
+			break;
     }
 }
 
 void showUI() {
-    system("cls");
+	system("cls");
     printLine();
     printLine();
     printCenter(" _____            _ _       _   ___ _       _                ");
@@ -181,7 +273,7 @@ void showUI() {
     printOption();
     printEmpty();
     printEmpty();
-    printCenter("Up/down to navigate, enter to select option");
+    printCenter("Arrow keys to navigate, enter to select option");
     printEmpty();
     printLine();
     printLine();
