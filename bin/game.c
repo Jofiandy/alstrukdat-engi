@@ -4,6 +4,7 @@
 #include "key.h"
 #include "matriks.h"
 #include "point.h"
+#include "jam.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
@@ -26,7 +27,7 @@ typedef struct {
 	teleport tp[5][16][16];
 } graph;
 
-void initTp(graph * g){ //File Teleport
+void initTp(graph * g){
 	FILE * gf = fopen("./src/g.txt","r");
 	for (int i = 0; i < 5; i++)
 		for (int j = 0; j < 16; j++)
@@ -57,6 +58,9 @@ char name[100], name_load[100];
 int current_room;
 MATRIKS room[5], gameRoom;
 POINT p_pos;
+Waktu Jam;
+int life = 3;
+int money = 0;
 
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
@@ -64,6 +68,7 @@ void emptyString(char* s){
 }
 
 void newSave(){
+	CreateStart(&Jam);
 	p_pos = MakePOINT(7, 7);
 	current_room = 1;
 	for (char c = '1'; c <= '4'; c++){
@@ -84,18 +89,18 @@ void firstSetup(){
 
 void keyGame(char key){
 	
-	if (key == KEY_UP){
-		if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')
-			Absis(p_pos)--;
-	} else if (key == KEY_DOWN){
-		if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')
-			Absis(p_pos)++;
-	} else if (key == KEY_RIGHT){
-		if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')
-			Ordinat(p_pos)++;
-	} else if (key == KEY_LEFT){
-		if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')
-			Ordinat(p_pos)--;
+	if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){	
+		UpDate(&Jam,1);
+		Absis(p_pos)--;
+	} else if (key == KEY_DOWN && (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')){
+		UpDate(&Jam,1);
+		Absis(p_pos)++;
+	} else if (key == KEY_RIGHT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')){
+		UpDate(&Jam,1);
+		Ordinat(p_pos)++;
+	} else if (key == KEY_LEFT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')){
+		UpDate(&Jam,1);
+		Ordinat(p_pos)--;
 	} else if (key == KEY_ESC){
 		exit(0);
 	}
@@ -109,10 +114,14 @@ void printGame(){
 		current_room = tmp.to;
 		p_pos = tmp.pto;
 	}
-	CopyMATRIKS(room[current_room], &gameRoom);
-	Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'O';
+	printf("Life: %d |",life);
+	printf(" Money: %d |",money);
+	TulisWaktu(Jam);
 	
+	CopyMATRIKS(room[current_room], &gameRoom);
+	Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'P';
 	printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
+	
 	TulisMATRIKS(gameRoom);
 	printf("\n");
 	
@@ -141,7 +150,6 @@ void checkLoad(){
     
     if (file = fopen(fname, "r")){
         // TODO - Overwrite/load savegame data with file
-		
         fclose(file);
         strcpy(name, name_load);
         state = STATE_MENU;
