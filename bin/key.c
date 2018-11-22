@@ -9,13 +9,17 @@
 */
 
 #include "key.h"
-#include <conio.h>
+#include <curses.h>
 #include <stdio.h>
 
 int getKey(){
-    int c;
-    c = getch();
-    if (c == KEY_ARROW)
-        c = getch();
-    return c;
+	
+    initscr();
+	keypad(stdscr, TRUE);
+	cbreak();
+	noecho();
+    int key = getch();
+	endwin();
+	return key;
+
 }

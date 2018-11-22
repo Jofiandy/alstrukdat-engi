@@ -102,13 +102,13 @@ void newSave(){
 
 void firstSetup(){
 	
-    emptyString(name);
+	emptyString(name);
     state = STATE_MENU;
     option = OPTION_NEW;
 
 }
 
-void keyGame(char key){
+void keyGame(int key){
 	
 	if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){	
 		UpDate(&Jam,1);
@@ -126,7 +126,7 @@ void keyGame(char key){
 		UpDate(&Jam,1);
         updateCustomer(1);
 		Ordinat(p_pos)--;
-	} else if (key == KEY_ESC){
+	} else if (key == 'q'){
 		exit(0);
 	}
 	
@@ -185,8 +185,9 @@ void checkLoad(){
 }
 
 void readKey(){
-    int key = getKey();
-    int len;
+	
+	int key = getKey();
+	int len;
     switch(state){
         case STATE_MENU:
             switch(key){
@@ -196,7 +197,7 @@ void readKey(){
                 case KEY_DOWN:
 					option = (option + 4 + 1) % 4;
                     break;
-                case KEY_ENTER:
+                case '\n':
                     switch(option){
                         
                         case OPTION_NEW:
@@ -228,7 +229,7 @@ void readKey(){
                 name[len-1] = 0;
             else if ((len < 100) && (((key >= 'a') && (key <= 'z')) || ((key >= 'A') && (key <= 'Z')) || (key == KEY_SPACE)))
                 name[len] = (char) key;
-            else if (key == KEY_ENTER)
+            else if (key == '\n')
                 state = STATE_MENU;
             break;
         case STATE_LOAD:
@@ -241,7 +242,7 @@ void readKey(){
                     name_load[len-1] = 0;
                 else if ((len < 100) && (((key >= 'a') && (key <= 'z')) || ((key >= 'A') && (key <= 'Z')) || (key == KEY_SPACE)))
                     name_load[len] = (char) key;
-                else if (key == KEY_ENTER)
+                else if (key == '\n')
                     checkLoad();
             }
             break;
@@ -284,7 +285,7 @@ void printOption(){
 }
 
 void showUI() {
-	system("cls");
+	clrscr();
     printLine();
     printLine();
     printCenter(" _____            _ _       _   ___ _       _                ");
