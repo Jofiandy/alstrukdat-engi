@@ -113,7 +113,7 @@ boolean IsBiner(BinTree P)
         if (Left(P) != Nil && Right(P) != Nil) return true;
         return false; 
     }
-    return false
+    return false;
 }
 
 /*fungsi untuk mencari bahan makanan */

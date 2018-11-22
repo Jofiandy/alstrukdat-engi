@@ -80,7 +80,7 @@ void updateCustomer(int number)
     int jumlah;
     if (Sec(Jam) % 21 == 0 || Sec(Jam) == 1)
     {
-        orang.id = (rand() % (number+2))*2;
+        orang.id = (rand()%(number+1) +1)*2;
         printf("%d\n", orang.id);
         orang.Jam.S = 10;
         AddQue(&Customer, orang);

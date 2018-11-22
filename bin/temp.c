@@ -15,15 +15,15 @@ void makePaket(infotype x[105], int y, paket *calon){
 
 paket calon;
 
-int main(){
-	int x;
-	infotype tmp[105];
-	scanf("%d", &x);
-	scanf("%s", &tmp);
-	makePaket(tmp, x, &calon);
-	printf("%s\n", calon.info);
-	// char arr[5], brr[5];
-	// scanf("%s", &arr);
-	// strcpy(brr, arr);
-	// printf("%s\n", brr);
-}
+// int main(){
+// 	int x;
+// 	infotype tmp[105];
+// 	scanf("%d", &x);
+// 	scanf("%s", &tmp);
+// 	makePaket(tmp, x, &calon);
+// 	printf("%s\n", calon.info);
+// 	// char arr[5], brr[5];
+// 	// scanf("%s", &arr);
+// 	// strcpy(brr, arr);
+// 	// printf("%s\n", brr);
+// }
