@@ -5,6 +5,7 @@
 #include "matriks.h"
 #include "point.h"
 #include "jam.h"
+#include "queue.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
@@ -59,6 +60,7 @@ int current_room;
 MATRIKS room[5], gameRoom;
 POINT p_pos;
 Waktu Jam;
+Queue Customer;
 int life = 3;
 int money = 0;
 
@@ -67,8 +69,27 @@ void emptyString(char* s){
         s[i] = 0;
 }
 
+void displayCustomer(){
+    printf("Id : %d ", InfoTailQue(Customer).id);
+    printf("Jumlah : %d ", NBElmtQue(Customer));
+}
+
+void updateCustomer(int number)
+{
+    infotypeQue orang;
+    int jumlah;
+    if (Sec(Jam) % 21 == 0 || Sec(Jam) == 1)
+    {
+        orang.id = (rand() % (number+2))*2;
+        printf("%d\n", orang.id);
+        orang.Jam.S = 10;
+        AddQue(&Customer, orang);
+    }
+}
+
 void newSave(){
 	CreateStart(&Jam);
+    CreateEmptyQue(&Customer, 10);
 	p_pos = MakePOINT(7, 7);
 	current_room = 1;
 	for (char c = '1'; c <= '4'; c++){
@@ -91,15 +112,19 @@ void keyGame(char key){
 	
 	if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){	
 		UpDate(&Jam,1);
+        updateCustomer(1);
 		Absis(p_pos)--;
 	} else if (key == KEY_DOWN && (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')){
 		UpDate(&Jam,1);
+        updateCustomer(1);
 		Absis(p_pos)++;
 	} else if (key == KEY_RIGHT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')){
 		UpDate(&Jam,1);
+        updateCustomer(1);
 		Ordinat(p_pos)++;
 	} else if (key == KEY_LEFT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')){
 		UpDate(&Jam,1);
+        updateCustomer(1);
 		Ordinat(p_pos)--;
 	} else if (key == KEY_ESC){
 		exit(0);
@@ -117,13 +142,15 @@ void printGame(){
 	printf("Life: %d |",life);
 	printf(" Money: %d |",money);
 	TulisWaktu(Jam);
-	
+	displayCustomer();
+
 	CopyMATRIKS(room[current_room], &gameRoom);
 	Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'P';
 	printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
 	
 	TulisMATRIKS(gameRoom);
 	printf("\n");
+
 	
 }
 
