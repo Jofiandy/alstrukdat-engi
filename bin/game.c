@@ -1,11 +1,16 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include "key.h"
+
+// [!] comment out one of these depending on your OS
+#include "linux/key.h"
+//#include "windows/key.h"
+
 #include "matriks.h"
 #include "point.h"
 #include "jam.h"
 #include "queue.h"
+#include "graph.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
@@ -16,39 +21,6 @@
 #define OPTION_START 1
 #define OPTION_LOAD 2
 #define OPTION_EXIT 3
-
-/* fjiodsjiofjioafjsijfaisjifas temporary */
-
-typedef struct {
-	int to;
-	POINT pto;
-} teleport;
-
-typedef struct {
-	teleport tp[5][16][16];
-} graph;
-
-void initTp(graph * g){
-	FILE * gf = fopen("./src/g.txt","r");
-	for (int i = 0; i < 5; i++)
-		for (int j = 0; j < 16; j++)
-			for (int k = 0; k < 16; k++){
-				g->tp[i][j][k].to = -1;
-				g->tp[i][j][k].pto = MakePOINT(-1,-1);
-			}
-	
-	int x[6];
-	while (fscanf(gf, "%d", &x[0]) == 1){
-		for (int i = 1; i < 6; i++)
-			fscanf(gf, "%d", &x[i]);
-		g->tp[x[0]][x[1]][x[2]].to = x[3];
-		g->tp[x[0]][x[1]][x[2]].pto = MakePOINT(x[4], x[5]);
-	}
-	fclose(gf);
-}
-
-graph g;
-/* -----dsaijisjdajjakdkjasjkdljladjlkasd---- */
 
 const char *not_found = "Player name not found, press any key to go back";
 const char *opt[] = {" New Game"," Start   "," Load    "," Exit    "};
@@ -61,6 +33,7 @@ MATRIKS room[5], gameRoom;
 POINT p_pos;
 Waktu Jam;
 Queue Customer;
+graph g;
 int life = 3;
 int money = 0;
 
@@ -97,7 +70,7 @@ void newSave(){
 		src[6] = c;
 		BacaMATRIKS(&room[c - '0'], src);
 	}
-	initTp(&g); // temporary
+	initTp(&g, "./src/g.txt"); // temporary
 }
 
 void firstSetup(){
@@ -126,7 +99,7 @@ void keyGame(char key){
 		UpDate(&Jam,1);
         updateCustomer(1);
 		Ordinat(p_pos)--;
-	} else if (key == KEY_ESC){
+	} else if (key == 'q'){
 		exit(0);
 	}
 	
@@ -284,7 +257,7 @@ void printOption(){
 }
 
 void showUI() {
-	system("cls");
+	clrscr();
     printLine();
     printLine();
     printCenter(" _____            _ _       _   ___ _       _                ");
