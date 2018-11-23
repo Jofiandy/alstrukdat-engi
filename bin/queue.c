@@ -4,6 +4,8 @@
 
 #include "boolean.h"
 #include "queue.h"
+#include "jam.h"
+#include "stack.h"
 #include <stdlib.h>
 /* Konstanta untuk mendefinisikan address tak terdefinisi */
 
@@ -102,4 +104,19 @@ void TulisFileQue (Queue Q,FILE *f){
 		TulisFileJam(X.Jam,f);
 		fprintf(f,"\n");
 	}
+}
+
+void PrintQue (Queue Q){
+	while(!(IsEmptyQue(Q)))
+	{
+		infotypeQue X;
+		DelQue(&Q, &X);
+		printf("%d\tCustomer akan menunggu sampai: ", X.id);
+		TulisWaktuKesabaran(X.Jam);
+	}
+	// for (int i=1; i<=NBElmtQue(Q); i++)
+	// {
+	// 	printf("%d\tCustomer akan menunggu sampai: ", Q.T[i].id);
+	// 	TulisWaktuKesabaran(Q.T[i].Jam);
+	// }
 }

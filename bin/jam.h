@@ -64,6 +64,8 @@ void TulisWaktu(Waktu Time);
 	Proses	: Menuliskan satu per satu komponen jam ke layar dalam format H:M:S dan menampilkan komponen hari dalam D-D(nilai D)
 */
 
+void TulisWaktuKesabaran(Waktu Time);
+
 void TulisFileJam(Waktu Time, FILE *f);
 
 #endif

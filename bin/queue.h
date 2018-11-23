@@ -73,4 +73,6 @@ void DelQue (Queue * Q, infotypeQue * X);
 
 void TulisFileQue (Queue Q,FILE *f);
 		
+void PrintQue (Queue Q);
+
 #endif

@@ -69,27 +69,53 @@ void emptyString(char* s){
         s[i] = 0;
 }
 
+void printLine(){
+    printf("--------------------------------------------------------------------------------------------------------------------\n");
+}
+
+void printEmpty(){
+    printf("---                                                                                                              ---\n");
+}
+
+void printCenter(char *s) {
+    printf("---%*s%*s---\n",55+strlen(s)/2,s,55-strlen(s)/2,"");
+}
+
 void displayCustomer(){
-    printf("Id : %d ", InfoTailQue(Customer).id);
-    printf("Jumlah : %d ", NBElmtQue(Customer));
+    printf("List Customer yang Menunggu\n");
+    printLine();    
+    printf("Jumlah Antrian: %d \n", NBElmtQue(Customer));
+    PrintQue(Customer);
 }
 
 void updateCustomer(int number)
 {
     infotypeQue orang;
     int jumlah;
-    if (Sec(Jam) % 21 == 0 || Sec(Jam) == 1)
+    Waktu WaktuKesabaran;
+    CreateStart(&WaktuKesabaran);
+    if (Sec(Jam) % 37 == 0 || (Hour(Jam) == 0 && Min(Jam) == 0 && Sec(Jam) == 1) || Sec(Jam) % 23 == 0)
     {
         orang.id = (rand()%(number+1) +1)*2;
         printf("%d\n", orang.id);
-        orang.Jam.S = 10;
+        WaktuKesabaran = Jam;
+        int temp = (rand()%(1) +1);
+        if (temp == 1)
+        {
+            UpDate(&WaktuKesabaran, (rand()%20)+30);
+        }
+        else
+        {
+            UpDate(&WaktuKesabaran, (rand()%15)+30);
+        }
+        orang.Jam = CreateWaktu(Hour(WaktuKesabaran), Min(WaktuKesabaran), Sec(WaktuKesabaran), Day(WaktuKesabaran));
         AddQue(&Customer, orang);
     }
 }
 
 void newSave(){
 	CreateStart(&Jam);
-    CreateEmptyQue(&Customer, 10);
+    CreateEmptyQue(&Customer, 20);
 	p_pos = MakePOINT(7, 7);
 	current_room = 1;
 	for (char c = '1'; c <= '4'; c++){
@@ -134,6 +160,7 @@ void keyGame(char key){
 
 void printGame(){
 	
+    infotypeQue buang;
 	if (g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)].to != -1){
 		teleport tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
 		current_room = tmp.to;
@@ -142,28 +169,27 @@ void printGame(){
 	printf("Life: %d |",life);
 	printf(" Money: %d |",money);
 	TulisWaktu(Jam);
-	displayCustomer();
 
 	CopyMATRIKS(room[current_room], &gameRoom);
 	Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'P';
 	printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
 	
 	TulisMATRIKS(gameRoom);
+    printf("\n");
+	displayCustomer();
+    if (InfoHeadQue(Customer).Jam.H == Jam.H && InfoHeadQue(Customer).Jam.M == Jam.M 
+    && InfoHeadQue(Customer).Jam.S == Jam.S)
+    {
+        DelQue(&Customer, &buang);
+        life--;
+    }
+
+    /* Life Habis */
+    if(life == 0)
+    {
+        exit(0);
+    }
 	printf("\n");
-
-	
-}
-
-void printLine(){
-    printf("--------------------------------------------------------------------------------------------------------------------\n");
-}
-
-void printEmpty(){
-    printf("---                                                                                                              ---\n");
-}
-
-void printCenter(char *s) {
-    printf("---%*s%*s---\n",55+strlen(s)/2,s,55-strlen(s)/2,"");
 }
 
 void checkLoad(){
