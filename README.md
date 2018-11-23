@@ -10,11 +10,18 @@ Always mark what's currently missing on the source code by putting in a comment,
 
 ## Installation and Running
 * Make sure that GNU C is already installed on your computer.
-* To compile the dependencies, execute:
+* To compile and run from **Windows**, change the include in game.c to "windows/key.h" (line 6-7), execute:
 ``` bash
-tubes> ___compile
-```
-* To play the game, run:
-``` bash
+tubes> compile_win
 tubes> "Engi's Kitchen"
+```
+* To compile and run from **Linux**, change the include in game.c to "linux/key.h" (line 6-7), execute:
+* *Once*
+``` bash
+tubes> chmod +x compile_lin.sh
+```
+* *Later on*
+``` bash
+tubes> ./compile_lin
+tubes> ./"Engi's Kitchen"
 ```
