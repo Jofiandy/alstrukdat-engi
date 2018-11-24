@@ -96,6 +96,19 @@ void DelQue (Queue * Q, infotypeQue * X){
 	 }
 }
 
+boolean IsAdaDuaQue(Queue Q){
+	boolean ada;
+	ada = false;
+	while (!IsEmptyQue(Q) && !ada){
+		infotypeQue X;
+		DelQue(&Q, &X);
+		if (X.id == 2) {
+			ada = true;
+		}
+	}
+	return ada;	
+}
+
 void TulisFileQue (Queue Q,FILE *f){
 	infotypeQue X;
 	while(!IsEmptyQue){
