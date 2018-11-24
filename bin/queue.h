@@ -75,4 +75,6 @@ void TulisFileQue (Queue Q,FILE *f);
 		
 void PrintQue (Queue Q);
 
+boolean IsAdaDuaQue(Queue Q);
+
 #endif
