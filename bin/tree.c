@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
-
 BinTree temptree[30];
 BinTree treemakanan;
 Infotype arrmakanan[30] = {"Piring", "Sendok", "Garpu", "Es Krim", "Nasi", "Roti", "Spaghetti", "Pisang", 
                             "Stroberi", "Telur", "Ayam Goreng", "Patty", "Sosis", "Bolognese", "Carbonara",
                             "Banana Split", "Sundae", "Nasi telur dadar", "Nasi Ayam Goreng", "Burger", "Hot Dog", 
-                            "Keju", "Spaghetti Carbonara", "Spaghetii Bolognese"};  
+                            "Keju", "Spaghetti Carbonara", "Spaghetti Bolognese"};  
 
 void buatTree(BinTree parent,BinTree l, BinTree r){
     Left(parent) = l;
@@ -119,7 +118,7 @@ boolean IsBiner(BinTree P)
 /*fungsi untuk mencari bahan makanan */
 int cariIndeks(Infotype bahanmakanan){
     int ret = -1;
-    for (int i = 0; i < 24 && ret != -1; i++){
+    for (int i = 0; i < 24 && ret == -1; i++){
         if (strcmp(bahanmakanan, arrmakanan[i]) == 0){
             ret = i;
         }
@@ -127,7 +126,33 @@ int cariIndeks(Infotype bahanmakanan){
     return ret;
 }
 
+boolean isada(BinTree Pohon,infotype X){
+    if (IsTreeEmpty(Pohon)){
+        return false;
+    }else{
+        if (Akar(Pohon) == X) 
+            return true;
+        else return isada(Left(Pohon), X) || isada(Right(Pohon), X);
+    }
+}
 
-// int getDepth(Infotype bahanmakanan){
+int carikedalaman(BinTree Pohon, int depth, int indeks){
+    if (Akar(Pohon) == indeks) 
+        return depth;
+    else {
+        if (isada(Left(Pohon), indeks)) 
+            return carikedalaman(Left(Pohon), depth + 1, indeks);
+        else 
+            return carikedalaman(Right(Pohon), depth + 1, indeks);
+    }
+}
 
-// }
+/*fungsi untuk mencari keuntungan dari makanan yang dihasilkan */
+int keuntungan(BinTree Pohon, Infotype bahanmakanan){
+    int idx = cariIndeks(bahanmakanan);
+    return carikedalaman(Pohon, 1, idx) * 1000;
+}
+
+boolean isparent(BinTree X, BinTree Y){
+    return (Left(X) == Y || Right(X) == Y);
+}

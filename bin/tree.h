@@ -65,6 +65,16 @@ boolean IsBiner(BinTree P);
 int cariIndeks(Infotype bahanmakanan);
 
 /*fungsi untuk mencari keuntungan dari makanan yang dihasilkan */
-int keuntungan(Infotype bahanmakanan);
+int keuntungan(BinTree Pohon, Infotype bahanmakanan);
+
+/*fungsi untuk mengecek apakah ada suatu elemen x pada sebuah binary tree P*/
+boolean isada(BinTree P, infotype X);
+
+/*fungsi untuk mencari kedalaman makanan dari tree */
+int carikedalaman(BinTree Pohon, int depth, int indeks);
+
+/*fungsi untuk mengecek apakah X parent dari Y atau bukan */
+boolean isparent(BinTree X, BinTree Y);
+
 
 #endif
