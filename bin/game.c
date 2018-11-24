@@ -11,6 +11,8 @@
 #include "jam.h"
 #include "queue.h"
 #include "graph.h"
+#include "stack.h"
+#include "tree.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
@@ -37,6 +39,7 @@ Queue Customer;
 graph g;
 int life = 300;
 int money = 0;
+Stack Tangan;
 
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
@@ -181,6 +184,31 @@ int noMeja (int X, int Y) {
     else if (X==9 && Y==4 && current_room==3) return 10;
 }
 
+char ambilbahanmakanan(){
+    char ret = '-';
+    //bawah
+    if ((Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos)) != ' ') &&
+        Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos)) != '#'){
+        ret = Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos))
+    }
+    //atas
+    else if ((Elmt(gameRoom, Absis(p_pos) - 1, Ordinat(p_pos)) != ' ') &&
+        Elmt(gameRoom, Absis(p_pos) -1, Ordinat(p_pos)) != '#'){
+        ret = Elmt(gameRoom, Absis(p_pos) -1 1, Ordinat(p_pos))
+    }
+    //kanan
+    else if ((Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != ' ') &&
+        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != '#'){
+        ret = Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1)
+    }
+    //kiri
+    else if ((Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != ' ') &&
+        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != '#'){
+        ret = Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos))
+    }
+    return ret;
+}
+
 void taruhCustomer(int n) {
     // n jumlah kursi di meja
     infotypeQue buang;
@@ -248,10 +276,25 @@ void keyGame(char key){
                 taruhCustomer(n);
             } else //if (!isWrongplace(p_pos)) {
             {    // taruh makanan
+
             }
 
-        } else {
+        }
+        // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan
+        else {
+            char bahanmakanan = ambilbahanmakanan();
+            if (bahanmakanan != '-'){
+                //kasih ke tray, akan ada dua opsi:
+                //1. simpen makanan jadinya di tray
+                //2. ambil tray nya langsung anterin
+                if (bahanmakanan == 'T') {
 
+                }
+                else {
+                    
+                }
+            }
+            /* tidak ambil apa-apa */
         }
     } else if (key == 'q'){
         printCredit(money);
