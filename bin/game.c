@@ -125,6 +125,8 @@ void keyGame(char key){
 		UpDate(&Jam,1);
         updateCustomer(1);
 		Ordinat(p_pos)--;
+    } else if (key == KEY_SPACE) {
+        // taruh makan, customer, ngambil makanan dari dapur, buang sampah.
 	} else if (key == 'q'){
 		exit(0);
 	}
