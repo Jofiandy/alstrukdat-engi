@@ -11,6 +11,7 @@
 #include "jam.h"
 #include "queue.h"
 #include "graph.h"
+#include "tree.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
@@ -28,14 +29,19 @@ const char *opt[] = {" New Game"," Start   "," Load    "," Exit    "};
 int state, option;
 char name[100], name_load[100];
 
+Infotype arrmenu[8] = {"Banana Split", "Sundae", "Nasi telur dadar", "Nasi Ayam Goreng", "Burger", "Hot Dog", 
+                            "Spaghetti Carbonara", "Spaghetti Bolognese"};
+
+infotypeQue tunggumenu[12];
 int meja[15];
 int current_room;
 MATRIKS room[5], gameRoom;
 POINT p_pos;
 Waktu Jam;
 Queue Customer;
+Queue Duduk;
 graph g;
-int life = 300;
+int life = 30;
 int money = 0;
 
 void emptyString(char* s){
@@ -62,6 +68,15 @@ void displayCustomer(){
     PrintQue(Customer);
 }
 
+void cetaktunggumenu(){
+    printf("List Customer yang menunggu menu : \n");
+    for(int i = 1;i<=10;i++){
+        if(tunggumenu[i].id != 0){
+            printf("%d      %s     ",i,arrmenu[tunggumenu[i].id]);
+            TulisWaktuKesabaran(tunggumenu[i].Jam);
+        }
+    }
+}
 void updateCustomer(int number)
 {
     infotypeQue orang;
@@ -102,6 +117,11 @@ void newSave(){
 
 void firstSetup(){
     for (int i = 0; i < 15; ++i) meja[i] = 0;
+    for (int i = 0; i <= 10; ++i)
+    {
+        tunggumenu[i].id = 0;
+        CreateStart(&tunggumenu[i].Jam);
+    }
     emptyString(name);
     state = STATE_MENU;
     option = OPTION_NEW;
@@ -181,44 +201,93 @@ int noMeja (int X, int Y) {
     else if (X==9 && Y==4 && current_room==3) return 10;
 }
 
+void caricustmarah(){
+    for(int i = 1;i<=10;i++){
+        if (tunggumenu[i].id != 0 && tunggumenu[i].Jam.H == Jam.H && tunggumenu[i].Jam.M == Jam.M 
+            && tunggumenu[i].Jam.S == Jam.S)
+            {
+                tunggumenu[i].id = 0;
+                meja[i] = 0;
+                life--;
+            }
+
+            /* Life Habis */
+            if(life == 0)
+            {
+                printCredit(money);
+                exit(0);
+        }
+    }
+}
+
 void taruhCustomer(int n) {
     // n jumlah kursi di meja
     infotypeQue buang;
+    int nomermeja;
+    Waktu jamtmp;
+    jamtmp = Jam;
+    UpDate(&jamtmp,30); 
     if (InfoHeadQue(Customer).id <= n && n==2) {
         if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') {
-            meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos))] = 2;
+            nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos));
+            meja[nomermeja] = 2;
         } else {
-            meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos))] = 2;
+            nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos));
+            meja[nomermeja] = 2;
         }
         DelQue(&Customer, &buang);
+        tunggumenu[nomermeja].id = rand()%8;
+        tunggumenu[nomermeja].Jam = jamtmp;
     } else if (InfoHeadQue(Customer).id <= n) {
         if (InfoHeadQue(Customer).id == 2) {
             if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1);
+                meja[nomermeja] = 2;
             } else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 2;
             } else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 2;
             } else {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1);
+                meja[nomermeja] = 2;
             }
+
         } else {
             if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1);
+                meja[nomermeja] = 4;
             } else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 4;
             } else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 4;
             } else {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1);
+                meja[nomermeja] = 4;
             }
         }
+        tunggumenu[nomermeja].id = rand()%8;
+        tunggumenu[nomermeja].Jam = jamtmp;
         DelQue(&Customer, &buang);
     } else {
         // untuk yang antrian terdepan tidak cukup tapi di belakang ada yang cukup
-        
+        // infohead == 4 kursi 2
+        if (IsAdaDuaQue(Customer)) {
+            if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') {
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos));
+                meja[nomermeja] = 2;
+            } else {
+                nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos));
+                meja[nomermeja] = 2;
+            }
+            tunggumenu[nomermeja].id = rand()%8;
+            tunggumenu[nomermeja].Jam = jamtmp;
+            Del2Que(&Customer, &buang);
+        }
     }
-
 }
 
 void keyGame(char key){
@@ -245,11 +314,9 @@ void keyGame(char key){
             if (kursiKosong()) {
                 // taruh customer nb: meja pasti kosong.
                 int n = kursiKosong();
-                taruhCustomer(n);
-            } else //if (!isWrongplace(p_pos)) {
-            {    // taruh makanan
-            }
-
+                if (!IsEmptyQue(Customer)) taruhCustomer(n);
+            } else {
+                // taruh makanan
         } else {
 
         }
@@ -352,7 +419,10 @@ void printGame(){
         printCredit(money);
         exit(0);
     }
+
+    cetaktunggumenu();
     printf("\n");
+    caricustmarah();
 }
 
 void checkLoad(){
