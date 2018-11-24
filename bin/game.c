@@ -107,6 +107,43 @@ void firstSetup(){
 
 }
 
+void printGameOver(){
+  printf("\t\t\t  -------                                  --------\n");
+  printf("\t\t\t |       |                                |        |\n");
+  printf("\t\t\t|         |                              |          |\n" );
+  printf("\t\t\t|                                        |          |\n");  
+  printf("\t\t\t|     ------ ----- ---- ----  ----|      |          ||     ||----||----\n");
+  printf("\t\t\t|          |----  |    |    |  ___.      |          | |   | |____.|    |\n");
+  printf("\t\t\t |        |       |    |    |     `       |        |   | |  |    `|---|\n");
+  printf("\t\t\t  -------- -------|    |    |-----|        --------     |   |----||    -|\n\n\n");
+}
+
+void printCreditCreator(int money){
+    printf("\t\t\t\t\t\tThanks for playing with us!\n");
+    printf("\t\t\t\t\t\tYour Score is %d. Not bad!\n",money);
+    printf("\t\t\t\t\t\tHope you enjoy the game!\n\n");
+    printThank();
+    printf("\n\t\t\t\t\t\tThis game is presented by:\n");
+    printf("\t\t\t\t\t\t     Asif Hummam Rais\n");
+    printf("\t\t\t\t\t\t  Faiz Muhammad Muflich\n");
+    printf("\t\t\t\t\t\t   Irfan Sofyana Putra\n");
+    printf("\t\t\t\t\t\t     Jofiandy Leonata\n");
+    printf("\t\t\t\t\t\t  Muhammad Hanif Adzkiya\n");
+    printf("\t\t\t\t\t\t      Winston Wijaya\n\n");
+}
+
+printThank(){
+    printf("\n\t\t\t\t----- .    .  ----  |   | |  |     |   |  ----  |   |\n");
+    printf("\t\t\t\t  |   |----| |----| | | | |||        |   |    | |   |\n");
+    printf("\t\t\t\t  |   |    | |    | |  || |  |       |    ----   ---\n");
+}
+
+void printCredit(int money){
+    clrscr();
+    printGameOver();   
+    printCreditCreator(money);    
+}
+
 void keyGame(char key){
 	
 	if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){	
@@ -128,6 +165,7 @@ void keyGame(char key){
     } else if (key == KEY_SPACE) {
         // taruh makan, customer, ngambil makanan dari dapur, buang sampah.
 	} else if (key == 'q'){
+        printCredit(money);
 		exit(0);
 	}
 	
@@ -162,6 +200,7 @@ void printGame(){
     /* Life Habis */
     if(life == 0)
     {
+        printCredit(money);
         exit(0);
     }
 	printf("\n");
@@ -217,9 +256,10 @@ void readKey(){
                             emptyString(name_load);
                             state = STATE_LOAD;
                             break;
-                        case OPTION_EXIT:
+                        case OPTION_EXIT:{
+                            printCredit(money);
                             exit(0);
-                        
+                        }
                     }
             }
             break;
