@@ -18,7 +18,7 @@ typedef int address;   /* indeks tabel */
 
 /* Definisi Queue kosong: HEAD=Nil; TAIL=Nil. */
 /* Catatan implementasi: T[0] tidak pernah dipakai */
-typedef struct { int jmlCust;
+typedef struct { int id;
 				 Waktu Jam;
 				} queCustomer;
 				

@@ -102,7 +102,7 @@ boolean IsAdaDuaQue(Queue Q){
 	while (!IsEmptyQue(Q) && !ada){
 		infotypeQue X;
 		DelQue(&Q, &X);
-		if (X.jmlCust == 2) {
+		if (X.id == 2) {
 			ada = true;
 		}
 	}
@@ -111,7 +111,7 @@ boolean IsAdaDuaQue(Queue Q){
 
 void Del2Que (Queue * Q, infotypeQue *X){
 	address idx;
-	while((*Q).T[idx].jmlCust != 2){
+	while((*Q).T[idx].id != 2){
 		if(idx == MaxElQue(*Q))
 			idx = 1;
 		else
@@ -155,7 +155,7 @@ void TulisFileQue (Queue Q,FILE *f){
 	infotypeQue X;
 	while(!IsEmptyQue){
 		DelQue (&Q,&X);
-		fprintf(f,"%d ",X.jmlCust);
+		fprintf(f,"%d ",X.id);
 		TulisFileJam(X.Jam,f);
 		fprintf(f,"\n");
 	}
@@ -166,7 +166,7 @@ void PrintQue (Queue Q){
 	{
 		infotypeQue X;
 		DelQue(&Q, &X);
-		printf("%d\tCustomer akan menunggu sampai: ", X.jmlCust);
+		printf("%d\tCustomer akan menunggu sampai: ", X.id);
 		TulisWaktuKesabaran(X.Jam);
 	}
 	// for (int i=1; i<=NBElmtQue(Q); i++)
