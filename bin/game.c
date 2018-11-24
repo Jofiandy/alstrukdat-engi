@@ -3,8 +3,8 @@
 #include<stdlib.h>
 
 // [!] comment out one of these depending on your OS
-#include "linux/key.h"
-//#include "windows/key.h"
+//#include "linux/key.h"
+#include "windows/key.h"
 
 #include "matriks.h"
 #include "point.h"
@@ -28,13 +28,14 @@ const char *opt[] = {" New Game"," Start   "," Load    "," Exit    "};
 int state, option;
 char name[100], name_load[100];
 
+int meja[15];
 int current_room;
 MATRIKS room[5], gameRoom;
 POINT p_pos;
 Waktu Jam;
 Queue Customer;
 graph g;
-int life = 3;
+int life = 300;
 int money = 0;
 
 void emptyString(char* s){
@@ -87,20 +88,20 @@ void updateCustomer(int number)
 }
 
 void newSave(){
-	CreateStart(&Jam);
+    CreateStart(&Jam);
     CreateEmptyQue(&Customer, 20);
-	p_pos = MakePOINT(7, 7);
-	current_room = 1;
-	for (char c = '1'; c <= '4'; c++){
-		char src[] = "./src/1.txt";
-		src[6] = c;
-		BacaMATRIKS(&room[c - '0'], src);
-	}
-	initTp(&g, "./src/g.txt"); // temporary
+    p_pos = MakePOINT(7, 7);
+    current_room = 1;
+    for (char c = '1'; c <= '4'; c++){
+        char src[] = "./src/1.txt";
+        src[6] = c;
+        BacaMATRIKS(&room[c - '0'], src);
+    }
+    initTp(&g, "./src/g.txt"); // temporary
 }
 
 void firstSetup(){
-	
+    for (int i = 0; i < 15; ++i) meja[i] = 0;
     emptyString(name);
     state = STATE_MENU;
     option = OPTION_NEW;
@@ -144,50 +145,200 @@ void printCredit(int money){
     printCreditCreator(money);    
 }
 
+boolean isMeja() {
+    if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M'
+        || Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M'
+        || Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M'
+        || Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)+1) == 'M'
+        || Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == 'M'
+        || Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') 
+        return true;
+    else return false;
+}
+
+int kursiKosong() {
+    if ((Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == 'o' && Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == 'o')
+        || (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == 'o' && Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == 'o')
+        || (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'o' && Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == 'o')
+        || (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'o' && Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == 'o')) 
+        return 4;
+    else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == 'M' && Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'o'
+             || Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M' && Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'o')
+        return 2;
+    else return 0;
+}
+
+int noMeja (int X, int Y) {
+    if (X==3 && Y==4 && current_room==2) return 1;
+    else if (X==6 && Y==4 && current_room==2) return 2;
+    else if (X==9 && Y==4 && current_room==2) return 3;
+    else if (X==4 && Y==4 && current_room==1) return 4;
+    else if (X==4 && Y==10 && current_room==1) return 5;
+    else if (X==9 && Y==4 && current_room==1) return 6;
+    else if (X==9 && Y==10 && current_room==1) return 7;
+    else if (X==3 && Y==4 && current_room==3) return 8;
+    else if (X==6 && Y==4 && current_room==3) return 9;
+    else if (X==9 && Y==4 && current_room==3) return 10;
+}
+
+void taruhCustomer(int n) {
+    // n jumlah kursi di meja
+    infotypeQue buang;
+    if (InfoHeadQue(Customer).id <= n && n==2) {
+        if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') {
+            meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos))] = 2;
+        } else {
+            meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos))] = 2;
+        }
+        DelQue(&Customer, &buang);
+    } else if (InfoHeadQue(Customer).id <= n) {
+        if (InfoHeadQue(Customer).id == 2) {
+            if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') {
+                meja[noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1)] = 2;
+            } else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') {
+                meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1)] = 2;
+            } else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') {
+                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1)] = 2;
+            } else {
+                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1)] = 2;
+            }
+        } else {
+            if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') {
+                meja[noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1)] = 4;
+            } else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') {
+                meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1)] = 4;
+            } else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') {
+                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1)] = 4;
+            } else {
+                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1)] = 4;
+            }
+        }
+        DelQue(&Customer, &buang);
+    } else {
+        // untuk yang antrian terdepan tidak cukup tapi di belakang ada yang cukup
+        
+    }
+
+}
+
 void keyGame(char key){
-	
-	if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){	
-		UpDate(&Jam,1);
+    
+    if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){  
+        UpDate(&Jam,1);
         updateCustomer(1);
-		Absis(p_pos)--;
-	} else if (key == KEY_DOWN && (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')){
-		UpDate(&Jam,1);
+        Absis(p_pos)--;
+    } else if (key == KEY_DOWN && (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')){
+        UpDate(&Jam,1);
         updateCustomer(1);
-		Absis(p_pos)++;
-	} else if (key == KEY_RIGHT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')){
-		UpDate(&Jam,1);
+        Absis(p_pos)++;
+    } else if (key == KEY_RIGHT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')){
+        UpDate(&Jam,1);
         updateCustomer(1);
-		Ordinat(p_pos)++;
-	} else if (key == KEY_LEFT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')){
-		UpDate(&Jam,1);
+        Ordinat(p_pos)++;
+    } else if (key == KEY_LEFT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')){
+        UpDate(&Jam,1);
         updateCustomer(1);
-		Ordinat(p_pos)--;
-	} else if (key == 'q'){
+        Ordinat(p_pos)--;
+    } else if (key == KEY_SPACE) {
+        // meja
+        if (isMeja()) {
+            if (kursiKosong()) {
+                // taruh customer nb: meja pasti kosong.
+                int n = kursiKosong();
+                taruhCustomer(n);
+            } else //if (!isWrongplace(p_pos)) {
+            {    // taruh makanan
+            }
+
+        } else {
+
+        }
+    } else if (key == 'q'){
         printCredit(money);
-		exit(0);
-	}
-	
+        exit(0);
+    }
+    
 }
 
 void printGame(){
-	
+    
     infotypeQue buang;
-	if (g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)].to != -1){
-		teleport tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
-		current_room = tmp.to;
-		p_pos = tmp.pto;
-	}
-	printf("Life: %d |",life);
-	printf(" Money: %d |",money);
-	TulisWaktu(Jam);
+    if (g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)].to != -1){
+        teleport tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
+        current_room = tmp.to;
+        p_pos = tmp.pto;
+    }
+    printf("Life: %d |",life);
+    printf(" Money: %d |",money);
+    TulisWaktu(Jam);
 
-	CopyMATRIKS(room[current_room], &gameRoom);
-	Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'P';
-	printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
-	
-	TulisMATRIKS(gameRoom);
+    CopyMATRIKS(room[current_room], &gameRoom);
+    Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'P';
+    if (current_room == 2 ) {
+       if (meja[1]) {
+        Elmt(gameRoom,3,3) = 'C';
+        Elmt(gameRoom,3,5) = 'C';
+       }
+       if (meja[2]) {
+        Elmt(gameRoom,6,3) = 'C';
+        Elmt(gameRoom,6,5) = 'C';
+       }
+       if (meja[3]) {
+        Elmt(gameRoom,9,3) = 'C';
+        Elmt(gameRoom,9,5) = 'C';
+       }
+    } else if (current_room == 1) {
+        if (meja[4]) {
+            Elmt(gameRoom,4,3) = 'C';
+            Elmt(gameRoom,4,5) = 'C';
+            if (meja[4] == 4) {
+                Elmt(gameRoom,3,4) = 'C';
+                Elmt(gameRoom,5,4) = 'C';
+            }
+        }
+        if (meja[5]) {
+            Elmt(gameRoom,4,9) = 'C';
+            Elmt(gameRoom,4,11) = 'C';
+            if (meja[5] == 4) {
+                Elmt(gameRoom,3,10) = 'C';
+                Elmt(gameRoom,5,10) = 'C';
+            }
+        }
+        if (meja[6]) {
+            Elmt(gameRoom,9,3) = 'C';
+            Elmt(gameRoom,9,5) = 'C';
+            if (meja[6] == 4) {
+                Elmt(gameRoom,8,4) = 'C';
+                Elmt(gameRoom,10,4) = 'C';
+            }
+        }
+        if (meja[7]) {
+            Elmt(gameRoom,9,9) = 'C';
+            Elmt(gameRoom,9,11) = 'C';
+            if (meja[7] == 4) {
+                Elmt(gameRoom,8,10) = 'C';
+                Elmt(gameRoom,10,10) = 'C';
+            }
+        }
+    } else if (current_room == 3) {
+        if (meja[8]) {
+         Elmt(gameRoom,3,3) = 'C';
+         Elmt(gameRoom,3,5) = 'C';
+        }
+        if (meja[9]) {
+         Elmt(gameRoom,6,3) = 'C';
+         Elmt(gameRoom,6,5) = 'C';
+        }
+        if (meja[10]) {
+         Elmt(gameRoom,9,3) = 'C';
+         Elmt(gameRoom,9,5) = 'C';
+        }
+    }
+    printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
+    
+    TulisMATRIKS(gameRoom);
     printf("\n");
-	displayCustomer();
+    displayCustomer();
     if (InfoHeadQue(Customer).Jam.H == Jam.H && InfoHeadQue(Customer).Jam.M == Jam.M 
     && InfoHeadQue(Customer).Jam.S == Jam.S)
     {
@@ -201,7 +352,7 @@ void printGame(){
         printCredit(money);
         exit(0);
     }
-	printf("\n");
+    printf("\n");
 }
 
 void checkLoad(){
@@ -229,10 +380,10 @@ void readKey(){
         case STATE_MENU:
             switch(key){
                 case KEY_UP:
-					option = (option + 4 - 1) % 4;
+                    option = (option + 4 - 1) % 4;
                     break;
                 case KEY_DOWN:
-					option = (option + 4 + 1) % 4;
+                    option = (option + 4 + 1) % 4;
                     break;
                 case KEY_ENTER:
                     switch(option){
@@ -244,9 +395,9 @@ void readKey(){
                             break;
                         case OPTION_START:
                             if (name[0] == 0){
-								newSave();
+                                newSave();
                                 state = STATE_NAME;
-							}
+                            }
                             else
                                 state = STATE_GAME;
                             break;
@@ -284,9 +435,9 @@ void readKey(){
                     checkLoad();
             }
             break;
-		case STATE_GAME:
-			keyGame(key);
-			break;
+        case STATE_GAME:
+            keyGame(key);
+            break;
     }
 }
 
@@ -314,16 +465,16 @@ void printOption(){
             strcat(input, "_");
             printCenter(input);
             break;
-		case STATE_GAME:
-			printf("\n");
-			printGame();
-			printf("\n");
-			break;
+        case STATE_GAME:
+            printf("\n");
+            printGame();
+            printf("\n");
+            break;
     }
 }
 
 void showUI() {
-	clrscr();
+    clrscr();
     printLine();
     printLine();
     printCenter(" _____            _ _       _   ___ _       _                ");

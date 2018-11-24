@@ -1,7 +1,6 @@
 /* File : queue.h */
 /* Definisi ADT Queue dengan representasi array secara eksplisit dan alokasi dinamik */
 /* Model Implementasi Versi III dengan circular buffer */
-
 #include "boolean.h"
 #include "queue.h"
 #include "jam.h"
@@ -72,6 +71,7 @@ void AddQue (Queue * Q, infotypeQue X){
 	 /* Algoritma */
 	if (IsEmptyQue(*Q)) {
 		HeadQue(*Q)=1;
+		TailQue(*Q)=0;
 	} else /* Q tidak kosong */ {
 		if(TailQue(*Q) == MaxElQue(*Q)){
 			TailQue(*Q) = 0;
@@ -107,6 +107,48 @@ boolean IsAdaDuaQue(Queue Q){
 		}
 	}
 	return ada;	
+}
+
+void Del2Que (Queue * Q, infotypeQue *X){
+	address idx;
+	while((*Q).T[idx].id != 2){
+		if(idx == MaxElQue(*Q))
+			idx = 1;
+		else
+			idx++;
+	}
+	*X = (*Q).T[idx];
+	if(HeadQue(*Q) == TailQue(*Q)) //If only one element and delete it
+		CreateEmptyQue(Q,MaxElQue(*Q));
+	else {
+		if(idx < TailQue(*Q)){
+			while(idx <= (TailQue(*Q) - 1)){
+				(*Q).T[idx] = (*Q).T[idx+1];
+				idx++;
+			}
+			TailQue(*Q)--;
+		} else {
+			if(TailQue(*Q) == 1){
+				while(idx < MaxElQue(*Q)){
+					(*Q).T[idx] = (*Q).T[idx+1];
+					idx++;
+				}
+				(*Q).T[MaxElQue(*Q)] = (*Q).T[1];
+				TailQue(*Q) = MaxElQue(*Q);
+			} else{
+				while(idx != (TailQue(*Q)-1)){
+					if(idx == MaxElQue(*Q)){
+						(*Q).T[MaxElQue(*Q)] = (*Q).T[1];
+						idx = 1;
+					} else {
+						(*Q).T[idx] = (*Q).T[idx+1];
+						idx++;
+					}
+				}
+				TailQue(*Q)--;
+			}
+		}
+	}
 }
 
 void TulisFileQue (Queue Q,FILE *f){
