@@ -60,4 +60,6 @@ void PrintStack(Stack S);
 
 void TulisFileStack(Stack S,FILE *f);
 
+int NbElmtSt(Stack S);
+
 #endif

@@ -44,7 +44,7 @@ Queue Duduk;
 graph g;
 int life = 30;
 int money = 0;
-Stack Tangan;
+Stack Tangan, Tray;
 
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
@@ -68,10 +68,10 @@ void displayCustomer(){
     printLine();    
     printf("Jumlah Antrian: %d \n", NBElmtQue(Customer));
     PrintQue(Customer);
-    PrintStack(Tangan);
 }
 
 void cetaktunggumenu(){
+    printLine();
     printf("List Customer yang menunggu menu : \n");
     for(int i = 1;i<=10;i++){
         if(tunggumenu[i].id != 0){
@@ -372,6 +372,7 @@ void keyGame(char key){
         updateCustomer(1);
         Ordinat(p_pos)--;
     } else if (key == KEY_SPACE) {
+        UpDate(&Jam, 1);
         // meja
         if (isMeja()) {
             if (kursiKosong()) {
@@ -385,7 +386,7 @@ void keyGame(char key){
                 // taruh makanan
             }
         } 
-        // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan
+        // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan / menaruh makanan di tray
         else {
             char bahan = ambilbahanmakanan();
             if (bahan != '-'){
@@ -393,7 +394,13 @@ void keyGame(char key){
                 //1. simpen makanan jadinya di tray
                 //2. ambil tray nya langsung anterin
                 if (bahan == 'T') {
-
+                    if (!IsEmptySta(Tangan)) {
+                        if (NbElmtSt(Tray) < 5) {
+                            Infotype food_jadi;
+                            Pop(&Tangan, &food_jadi);
+                            Push(&Tray, food_jadi);
+                        }
+                    }
                 }
                 else {
                     Infotype bahanmakanan;
@@ -433,6 +440,18 @@ void keyGame(char key){
         exit(0);
     }
     
+}
+
+void printHand(Stack S){
+    printLine();
+    printf("Hand:\n");
+    PrintStack(S);
+}
+
+void printTray(Stack S){
+    printLine();
+    printf("Tray:\n");
+    PrintStack(S);
 }
 
 void printGame(){
@@ -514,23 +533,23 @@ void printGame(){
     TulisMATRIKS(gameRoom);
     printf("\n");
     displayCustomer();
-    if (InfoHeadQue(Customer).Jam.H == Jam.H && InfoHeadQue(Customer).Jam.M == Jam.M 
-    && InfoHeadQue(Customer).Jam.S == Jam.S)
-    {
-        DelQue(&Customer, &buang);
-        life--;
-    }
-
-    /* Life Habis */
-    if(life == 0)
-    {
-        printCredit(money);
-        exit(0);
+    while (!IsEmptyQue(Customer) && InfoHeadQue(Customer).Jam.H == Jam.H && InfoHeadQue(Customer).Jam.M == Jam.M 
+        && InfoHeadQue(Customer).Jam.S == Jam.S){
+            DelQue(&Customer, &buang);
+        life--;    
+        /* Life Habis */
+        if(life == 0)
+        {
+            printCredit(money);
+            exit(0);
+        }
     }
 
     cetaktunggumenu();
     printf("\n");
     caricustmarah();
+    printHand(Tangan);
+    printTray(Tray);
 }
 
 void checkLoad(){
