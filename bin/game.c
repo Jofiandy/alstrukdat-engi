@@ -42,7 +42,7 @@ POINT p_pos;
 Waktu Jam;
 Queue Customer;
 Queue Duduk;
-graph g;
+Graph g;
 int life = 30;
 int money = 0;
 Stack Tangan, Tray;
@@ -57,7 +57,6 @@ struct savedata {
 	Waktu Jam;
 	Queue Customer;
 	Queue Duduk;
-	graph g;
 	int life;
 	int money;
 	Stack Tangan, Tray;
@@ -89,7 +88,6 @@ void saveGame(){
 	s.Jam = Jam;
 	s.Customer = Customer;
 	s.Duduk = Duduk;
-	s.g = g;
 	s.life = life;
 	s.money = money;
 	s.Tangan = Tangan;
@@ -195,7 +193,7 @@ void newSave(){
 
 void firstSetup(){
 	
-    initTp(&g, "./src/g.txt");
+    InitGraph(&g, "./src/g.txt");
     BuildTree(&treemakanan);
     emptyString(name);
     state = STATE_MENU;
@@ -581,10 +579,14 @@ void printTray(Stack S){
 void printGame(){
     
     infotypeQue buang;
-    if (g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)].to != -1){
-        dest tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
-        current_room = tmp.to;
-        p_pos = tmp.pto;
+	
+	infotypeGraph tmpg;
+	tmpg.room = current_room;
+	tmpg.p = p_pos;
+	tmpg = GetFirstSuccInfo(g, tmpg);
+    if (tmpg.room != -1){
+        current_room = tmpg.room;
+        p_pos = tmpg.p;
     }
     printf("                                                Life: %d | Money: %d",life,money);
     printf("\n                                            "); TulisWaktu(Jam);
@@ -701,7 +703,6 @@ void checkLoad(){
 		Jam = s.Jam;
 		Customer = s.Customer;
 		Duduk = s.Duduk;
-		g = s.g;
 		life = s.life;
 		money = s.money;
 		Tangan = s.Tangan;
