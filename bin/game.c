@@ -226,7 +226,7 @@ void taruhCustomer(int n) {
     int nomermeja;
     Waktu jamtmp;
     jamtmp = Jam;
-    UpDate(&jamtmp,30); 
+    UpDate(&jamtmp,50); 
     if (InfoHeadQue(Customer).id <= n && n==2) {
         if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') {
             nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos));
