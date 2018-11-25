@@ -2,16 +2,24 @@
 #define GRAPH_H
 
 #include "point.h"
-#include<stdlib.h>
-#include<stdio.h>
+
+/*
+
+	[Graph ADT]
+	
+	This graph is using a single-directed
+	graph type, so a node can only be
+	directed to another single node.
+	
+*/
 
 typedef struct {
-	int to;
+	int to; // room
 	POINT pto;
-} teleport;
+} dest;
 
 typedef struct {
-	teleport tp[5][16][16];
+	dest tp[5][16][16];
 } graph;
 
 void initTp(graph * g, char * source);

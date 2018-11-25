@@ -78,7 +78,7 @@ void TulisWaktu(Waktu Time)
 	Proses	: Menuliskan satu per satu komponen jam ke layar dalam format H:M:S dan menampilkan komponen hari dalam D-D(nilai D)
 */
 {
-	printf("Day-%d\tCurrent time: %d:%d:%d\n",Day(Time),Hour(Time),Min(Time),Sec(Time));
+	printf("Day-%d   Current time: %d:%d:%d\n",Day(Time),Hour(Time),Min(Time),Sec(Time));
 }
 
 void TulisWaktuKesabaran(Waktu Time)
