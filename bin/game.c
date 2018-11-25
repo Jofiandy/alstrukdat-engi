@@ -148,6 +148,7 @@ void cetaktunggumenu(){
 }
 void updateCustomer(int number)
 {
+	UpDate(&Jam,1);
     infotypeQue orang;
     int jumlah;
     Waktu WaktuKesabaran;
@@ -458,23 +459,20 @@ void keyGame(char key){
 	}
 	
     if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){  
-        UpDate(&Jam,1);
         updateCustomer(1);
         Absis(p_pos)--;
     } else if (key == KEY_DOWN && (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == ' ')){
-        UpDate(&Jam,1);
         updateCustomer(1);
         Absis(p_pos)++;
     } else if (key == KEY_RIGHT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) == ' ')){
-        UpDate(&Jam,1);
         updateCustomer(1);
         Ordinat(p_pos)++;
     } else if (key == KEY_LEFT && (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) == ' ')){
-        UpDate(&Jam,1);
         updateCustomer(1);
         Ordinat(p_pos)--;
     } 
     else if (key == 'b' || key == 'B') {
+		updateCustomer(1);
         while (!IsEmptySta(Tangan)){
             Infotype X;
             Pop(&Tangan, &X);
@@ -482,21 +480,21 @@ void keyGame(char key){
     }
     else if(key == 't' || key == 'T'){
         if(useTray){
+			updateCustomer(1);
             while(!IsEmptySta(Tray)){
                 Infotype food_buang;
                 Pop(&Tray,&food_buang);
             }
         }
     } else if (key == KEY_SPACE) {
-        UpDate(&Jam, 1);
         // meja
+		updateCustomer(1);
         if (isMeja()) {
             if (kursiKosong()) {
                 // taruh customer nb: meja pasti kosong.
                 int n = kursiKosong();
                 if (!IsEmptyQue(Customer)) {
                     taruhCustomer(n);
-                    UpDate(&Jam,1);
                 }
             } else {
                 // taruh makanan
