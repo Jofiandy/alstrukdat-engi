@@ -3,16 +3,16 @@
 #include<stdlib.h>
 
 // [!] comment out one of these depending on your OS
-#include "linux/key.h"
-//#include "windows/key.h"
+//#include "key_linux/key.h"
+#include "key_windows/key.h"
 
-#include "matriks.h"
-#include "point.h"
-#include "jam.h"
-#include "queue.h"
-#include "graph.h"
-#include "stack.h"
-#include "tree.h"
+#include "matriks/matriks.h"
+#include "point/point.h"
+#include "jam/jam.h"
+#include "queue/queue.h"
+#include "graph/graph.h"
+#include "stack/stack.h"
+#include "tree/tree.h"
 
 #define STATE_MENU 0
 #define STATE_NAME 1
