@@ -11,6 +11,7 @@
 #include "jam.h"
 #include "queue.h"
 #include "graph.h"
+#include "stack.h"
 #include "tree.h"
 
 #define STATE_MENU 0
@@ -43,6 +44,7 @@ Queue Duduk;
 graph g;
 int life = 30;
 int money = 0;
+Stack Tangan;
 
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
@@ -66,6 +68,7 @@ void displayCustomer(){
     printLine();    
     printf("Jumlah Antrian: %d \n", NBElmtQue(Customer));
     PrintQue(Customer);
+    PrintStack(Tangan);
 }
 
 void cetaktunggumenu(){
@@ -116,6 +119,8 @@ void newSave(){
 }
 
 void firstSetup(){
+    CreateEmpty(&Tangan);
+    BuildTree(&treemakanan);
     for (int i = 0; i < 15; ++i) meja[i] = 0;
     for (int i = 0; i <= 10; ++i)
     {
@@ -290,6 +295,64 @@ void taruhCustomer(int n) {
     }
 }
 
+void klasifikasibahan(char c, Infotype res){
+    if (c == 'T') strcpy(res, "Tray");
+    else if (c == 'L') strcpy(res, "Telur");
+    else if (c == 'S') strcpy(res, "Sendok");
+    else if (c == 'P') strcpy(res, "Piring");
+    else if (c == 'G') strcpy(res, "Garpu");
+    else if (c == 'Y') strcpy(res, "Patty");
+    else if (c == 'N') strcpy(res, "Nasi");
+    else if (c == 'R') strcpy(res, "Roti");
+    else if (c == 'A') strcpy(res, "Ayam Goreng");
+    else if (c == 'O') strcpy(res, "Sosis");
+    else if (c == 'E') strcpy(res, "Stroberi");
+    else if (c == 'K') strcpy(res, "Es Krim");
+    else if (c == 'I') strcpy(res, "Pisang");
+    else if (c == 'C' ) strcpy(res, "Carbonara");
+    else if (c == 'H') strcpy(res, "Spaghetti");
+    else if (c == 'B') strcpy(res, "Bolognese");
+    else if (c == 'K') strcpy(res, "Keju");
+}
+
+int lastbahan(Infotype bahan){
+    int ibahan = cariIndeks(bahan);
+    addrNode nbahan = AlokNode(ibahan);
+    int res = -1;
+    for (int i = 0; i < 8 && res == -1 ; i++){
+        Infotype tmp;
+        strcpy(tmp, arrmenu[i]);
+        int itmp = cariIndeks(tmp);
+        addrNode ntmp = AlokNode(itmp);
+        if (isparent(treemakanan, nbahan, ntmp)){
+            res =  i;
+        }
+    }
+    return res;
+}
+
+char ambilbahanmakanan(){
+    //atas
+    char ret = '-';
+    if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos));
+    //kanan
+    else if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1);
+    //bawah
+    else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos));
+    //kiri
+    else if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1);
+
+    return ret;
+}
+
 void keyGame(char key){
     
     if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){  
@@ -317,8 +380,50 @@ void keyGame(char key){
                 if (!IsEmptyQue(Customer)) taruhCustomer(n);
             } else {
                 // taruh makanan
-        } else {
+            }
+        } 
+        // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan
+        else {
+            char bahan = ambilbahanmakanan();
+            if (bahan != '-'){
+                //kasih ke tray, akan ada dua opsi:
+                //1. simpen makanan jadinya di tray
+                //2. ambil tray nya langsung anterin
+                if (bahan == 'T') {
 
+                }
+                else {
+                    Infotype bahanmakanan;
+                    klasifikasibahan(bahan, bahanmakanan);
+                    if (IsEmptySta(Tangan)){
+                        Push(&Tangan, bahanmakanan);
+                    }
+                    else {
+                        Infotype toptangan;
+                        strcpy(toptangan, InfoTop(Tangan));
+                        int itoptangan = cariIndeks(toptangan);
+                        addrNode tmp1 = AlokNode(itoptangan);
+
+                        int inow = cariIndeks(bahanmakanan);
+                        addrNode tmp2 = AlokNode(inow);
+                        
+                        //path for finding the food
+                        if (isparent(treemakanan, tmp1, tmp2)){
+                            Push(&Tangan, bahanmakanan);
+                            //food is ready, food is on the chef hand's
+                            if (lastbahan(bahanmakanan) != -1) {
+                                Infotype thefood;
+                                strcpy(thefood,arrmenu[lastbahan(bahanmakanan)]);
+                                while (!IsEmptySta(Tangan)){
+                                    Infotype toptmp;
+                                    Pop(&Tangan, &toptmp);
+                                }
+                                Push(&Tangan, thefood);
+                            }
+                        }
+                    }
+                }
+            }
         }
     } else if (key == 'q'){
         printCredit(money);

@@ -153,6 +153,26 @@ int keuntungan(BinTree Pohon, Infotype bahanmakanan){
     return carikedalaman(Pohon, 1, idx) * 1000;
 }
 
-boolean isparent(BinTree X, BinTree Y){
-    return (Left(X) == Y || Right(X) == Y);
+boolean isparent(BinTree Now, BinTree X, BinTree Y){
+    if (Akar(Now) == Akar(X)) {
+        if (Left(Now) != Niil) 
+            if (Akar(Left(Now)) == Akar(Y))
+                return true;
+        if (Right(Now) != Niil)
+            if (Akar(Right(Now)) == Akar(Y))
+                return true;
+        return false;        
+    }else {
+        if (isada(Left(Now), Akar(X)))
+            return isparent(Left(Now), X, Y);
+        else if (isada(Right(Now), Akar(X)))
+            return isparent(Right(Now), X, Y);
+        else return false;
+    }
+}
+
+boolean isjadimakanan(Infotype bahan){
+    int idx = cariIndeks(bahan);
+    BinTree tmp = AlokNode(idx);
+    return IsTreeOneElmt(tmp);
 }

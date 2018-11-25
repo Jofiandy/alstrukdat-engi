@@ -74,7 +74,10 @@ boolean isada(BinTree P, infotype X);
 int carikedalaman(BinTree Pohon, int depth, int indeks);
 
 /*fungsi untuk mengecek apakah X parent dari Y atau bukan */
-boolean isparent(BinTree X, BinTree Y);
+boolean isparent(BinTree Now, BinTree X, BinTree Y);
+
+/*fungsi untuk mengecek apakah suatu makanan adalah leave dari tree atau bukan */
+boolean isjadimakanan(Infotype bahan);
 
 
 #endif
