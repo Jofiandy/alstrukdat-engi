@@ -8,7 +8,7 @@ Infotype arrmakanan[30] = {"Piring", "Sendok", "Garpu", "Es Krim", "Nasi", "Roti
                             "Banana Split", "Sundae", "Nasi telur dadar", "Nasi Ayam Goreng", "Burger", "Hot Dog", 
                             "Keju", "Spaghetti Carbonara", "Spaghetti Bolognese"};  
 char istilahmakanan[30] = {'P', 'S', 'G', 'K', 'N', 'R', 'H', 'I', 'E', 'L', 'A', 'Y'
-                            ,'O','B','C','-','-','-','-','-','-','K','-','-'};
+                            ,'O','B','C','-','-','-','-','-','-','J','-','-'};
 
 
 void buatTree(BinTree parent,BinTree l, BinTree r){

@@ -398,7 +398,7 @@ void klasifikasibahan(char c, Infotype res){
     else if (c == 'C' ) strcpy(res, "Carbonara");
     else if (c == 'H') strcpy(res, "Spaghetti");
     else if (c == 'B') strcpy(res, "Bolognese");
-    else if (c == 'K') strcpy(res, "Keju");
+    else if (c == 'J') strcpy(res, "Keju");
 }
 
 int lastbahan(Infotype bahan){
