@@ -377,7 +377,10 @@ void keyGame(char key){
             if (kursiKosong()) {
                 // taruh customer nb: meja pasti kosong.
                 int n = kursiKosong();
-                if (!IsEmptyQue(Customer)) taruhCustomer(n);
+                if (!IsEmptyQue(Customer)) {
+                    taruhCustomer(n);
+                    UpDate(&Jam,1);
+                }
             } else {
                 // taruh makanan
             }
