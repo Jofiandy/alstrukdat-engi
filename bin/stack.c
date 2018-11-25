@@ -87,3 +87,12 @@ void TulisFileStack(Stack S,FILE *f){
 	}
 }
 
+int NbElmtSt(Stack S){
+	int cnt = 0;
+	while (!IsEmptySta(S)){
+		cnt++;
+		Infotype X;
+		Pop(&S, &X);
+	}
+	return cnt;
+}

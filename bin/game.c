@@ -44,7 +44,7 @@ Queue Duduk;
 graph g;
 int life = 30;
 int money = 0;
-Stack Tangan;
+Stack Tangan, Tray;
 
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
@@ -383,7 +383,7 @@ void keyGame(char key){
                 // taruh makanan
             }
         } 
-        // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan
+        // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan / menaruh makanan di tray
         else {
             char bahan = ambilbahanmakanan();
             if (bahan != '-'){
@@ -391,7 +391,13 @@ void keyGame(char key){
                 //1. simpen makanan jadinya di tray
                 //2. ambil tray nya langsung anterin
                 if (bahan == 'T') {
-
+                    if (!IsEmptySta(Tangan)) {
+                        if (NbElmtSt(Tray) < 5) {
+                            Infotype food_jadi;
+                            Pop(&Tangan, &food_jadi);
+                            Push(&Tray, food_jadi);
+                        }
+                    }
                 }
                 else {
                     Infotype bahanmakanan;
@@ -435,7 +441,13 @@ void keyGame(char key){
 
 void printHand(Stack S){
     printLine();
-    printf("Hand\n");
+    printf("Hand:\n");
+    PrintStack(S);
+}
+
+void printTray(Stack S){
+    printLine();
+    printf("Tray:\n");
     PrintStack(S);
 }
 
@@ -534,6 +546,7 @@ void printGame(){
     printf("\n");
     caricustmarah();
     printHand(Tangan);
+    printTray(Tray);
 }
 
 void checkLoad(){
