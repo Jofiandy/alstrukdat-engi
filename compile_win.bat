@@ -1,1 +1,1 @@
-gcc .\bin\*.c .\bin\windows\key.c -o "Engi's Kitchen"
+gcc bin\array.c bin\game.c bin\graph.c bin\jam.c bin\matriks.c bin\mesinkar.c bin\point.c bin\queue.c bin\stack.c bin\tree.c bin\windows\key.c -o "Engi's Kitchen"
