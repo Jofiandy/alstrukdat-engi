@@ -160,12 +160,7 @@ void PrintQue (Queue Q){
 	{
 		infotypeQue X;
 		DelQue(&Q, &X);
-		printf("%d\tCustomer akan menunggu sampai: ", X.id);
+		printf("%d-person Customer                    |   Deadline: ", X.id);
 		TulisWaktuKesabaran(X.Jam);
 	}
-	// for (int i=1; i<=NBElmtQue(Q); i++)
-	// {
-	// 	printf("%d\tCustomer akan menunggu sampai: ", Q.T[i].id);
-	// 	TulisWaktuKesabaran(Q.T[i].Jam);
-	// }
 }

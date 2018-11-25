@@ -104,6 +104,9 @@ void TulisFileMatriks(MATRIKS M, FILE *f){
 */
 void TulisMATRIKS (MATRIKS M) {
 	for (int i=GetFirstIdxBrs(M); i<=GetLastIdxBrs(M); i++) {
+		printf("                                                   ");
+		int len = 6 - (GetLastIdxKol(M)-GetFirstIdxKol(M))/2;
+		for (int j=0; j<len; j++) printf(" ");
 		for (int j=GetFirstIdxKol(M); j<=GetLastIdxKol(M); j++)
 			printf("%c", Elmt(M, i, j));
 		if (i!=GetLastIdxBrs(M)) printf("\n");

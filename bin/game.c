@@ -126,18 +126,22 @@ void printCenter(char *s) {
 }
 
 void displayCustomer(){
-    printf("List Customer yang Menunggu\n");
+    printf("Waiting Customers:\n");
     printLine();    
-    printf("Jumlah Antrian: %d \n", NBElmtQue(Customer));
+    printf("Customers queuing for table: %d\n", NBElmtQue(Customer));
     PrintQue(Customer);
 }
 
 void cetaktunggumenu(){
     printLine();
-    printf("List Customer yang menunggu menu : \n");
+    printf("Customers waiting for the order: \n");
     for(int i = 1;i<=10;i++){
         if(tunggumenu[i].id != -1){
-            printf("%d      %s     ",i,arrmenu[tunggumenu[i].id]);
+			int len = 22 - strlen(arrmenu[tunggumenu[i].id]);
+			if (i > 9) len--;
+            printf("Table #%d   |   %s",i,arrmenu[tunggumenu[i].id]);
+			for (int j = 0; j < len; j++) printf(" ");
+			printf("|   Deadline: ");
             TulisWaktuKesabaran(tunggumenu[i].Jam);
         }
     }
@@ -168,6 +172,7 @@ void updateCustomer(int number)
 }
 
 void newSave(){
+	
     CreateStart(&Jam);
     CreateEmptyQue(&Customer, 20);
     p_pos = MakePOINT(7, 7);
@@ -177,18 +182,20 @@ void newSave(){
         src[6] = c;
         BacaMATRIKS(&room[c - '0'], src);
     }
-    initTp(&g, "./src/g.txt"); // temporary
-}
-
-void firstSetup(){
     CreateEmpty(&Tangan);
-    BuildTree(&treemakanan);
     for (int i = 0; i < 15; ++i) meja[i] = 0;
     for (int i = 0; i <= 10; ++i)
     {
         tunggumenu[i].id = -1;
         CreateStart(&tunggumenu[i].Jam);
     }
+	
+}
+
+void firstSetup(){
+	
+    initTp(&g, "./src/g.txt");
+    BuildTree(&treemakanan);
     emptyString(name);
     state = STATE_MENU;
     option = OPTION_NEW;
@@ -230,7 +237,12 @@ void printCreditCreator(int money){
 void printCredit(int money){
     clrscr();
     printGameOver();   
-    printCreditCreator(money);    
+    printCreditCreator(money);
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("Press any key to go to main menu...");
+	getKey();
 }
 
 boolean isMeja() {
@@ -279,11 +291,11 @@ void caricustmarah(){
                 life--;
             }
 
-            /* Life Habis */
-            if(life == 0)
-            {
-                printCredit(money);
-                exit(0);
+        /* Life Habis */
+		if (life <= 0)
+		{
+			printCredit(money);
+			state = STATE_MENU;
         }
     }
 }
@@ -550,7 +562,7 @@ void keyGame(char key){
         state = STATE_RESEP;
     } else if (key == 'q'){
         printCredit(money);
-        exit(0);
+		state = STATE_MENU;
     }
     
 }
@@ -559,7 +571,7 @@ void printHand(Stack S){
     printLine();
     printf("Hand:\n");
     PrintStack(S);
-    if (useTray) printf("You also bring the tray\n");
+    if (useTray) printf("[Tray]\n");
 }
 
 void printTray(Stack S){
@@ -572,13 +584,12 @@ void printGame(){
     
     infotypeQue buang;
     if (g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)].to != -1){
-        teleport tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
+        dest tmp = g.tp[current_room][Absis(p_pos)][Ordinat(p_pos)];
         current_room = tmp.to;
         p_pos = tmp.pto;
     }
-    printf("Life: %d |",life);
-    printf(" Money: %d |",money);
-    TulisWaktu(Jam);
+    printf("                                                Life: %d | Money: %d",life,money);
+    printf("\n                                            "); TulisWaktu(Jam);
 
     CopyMATRIKS(room[current_room], &gameRoom);
     Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)) = 'P';
@@ -642,7 +653,6 @@ void printGame(){
          Elmt(gameRoom,9,5) = 'C';
         }
     }
-    printf("X: %d --- Y: %d\n", Absis(p_pos), Ordinat(p_pos));
     
     TulisMATRIKS(gameRoom);
     printf("\n");
@@ -655,12 +665,11 @@ void printGame(){
         if(life == 0)
         {
             printCredit(money);
-            exit(0);
+			state = STATE_MENU;
         }
     }
 
     cetaktunggumenu();
-    printf("\n");
     caricustmarah();
     printHand(Tangan);
     printTray(Tray);
@@ -741,10 +750,8 @@ void readKey(){
                             emptyString(name_load);
                             state = STATE_LOAD;
                             break;
-                        case OPTION_EXIT:{
-                            printCredit(money);
-                            exit(0);
-                        }
+                        case OPTION_EXIT:
+							exit(0);
                     }
             }
             break;
@@ -782,8 +789,11 @@ void readKey(){
 }
 
 void printResep(){
+	printCenter("Here are the recipes:");
+	printf("\n");
     PrintTree(treemakanan,1);
-    printf("-----Press Space to Back-----");
+	printf("\n");
+    printCenter("Press SPACE to go back to the game");
 }
 
 void printOption(){
@@ -849,7 +859,13 @@ void showUI() {
     printOption();
     printEmpty();
     printEmpty();
-    printCenter("Arrow keys to navigate, enter to select option");
+    if (state != STATE_GAME)
+		printCenter("Arrow keys to navigate, enter to select option");
+	else {
+		printCenter("Arrow keys: move | Q: quit to main menu | R: show recipe");
+		printCenter("B: throw food on hand | T: throw food on tray");
+		printCenter("Spacebar: put customer/serve food/take item");
+	}
     printEmpty();
     printLine();
     printLine();

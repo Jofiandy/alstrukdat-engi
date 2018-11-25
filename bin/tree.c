@@ -183,10 +183,11 @@ boolean isjadimakanan(Infotype bahan){
 void DummyPrintTree(BinTree P, int h, int hc){
     if (!IsTreeEmpty(P)){
         char tmpch = istilahmakanan[Akar(P)];
+		printf("                                           - ");
         if (tmpch == '-')
             printf("%s\n", arrmakanan[Akar(P)]);
         else 
-            printf("%s(%c)\n", arrmakanan[Akar(P)], tmpch);
+            printf("%s (%c)\n", arrmakanan[Akar(P)], tmpch);
         if (!IsTreeEmpty(Left(P))){
             for (int i = 0; i < h; i++)
                 printf(" ");
