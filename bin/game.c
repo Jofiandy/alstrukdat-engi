@@ -68,10 +68,10 @@ void displayCustomer(){
     printLine();    
     printf("Jumlah Antrian: %d \n", NBElmtQue(Customer));
     PrintQue(Customer);
-    PrintStack(Tangan);
 }
 
 void cetaktunggumenu(){
+    printLine();
     printf("List Customer yang menunggu menu : \n");
     for(int i = 1;i<=10;i++){
         if(tunggumenu[i].id != 0){
@@ -372,6 +372,7 @@ void keyGame(char key){
         updateCustomer(1);
         Ordinat(p_pos)--;
     } else if (key == KEY_SPACE) {
+        UpDate(&Jam, 1);
         // meja
         if (isMeja()) {
             if (kursiKosong()) {
@@ -430,6 +431,12 @@ void keyGame(char key){
         exit(0);
     }
     
+}
+
+void printHand(Stack S){
+    printLine();
+    printf("Hand\n");
+    PrintStack(S);
 }
 
 void printGame(){
@@ -511,23 +518,22 @@ void printGame(){
     TulisMATRIKS(gameRoom);
     printf("\n");
     displayCustomer();
-    if (InfoHeadQue(Customer).Jam.H == Jam.H && InfoHeadQue(Customer).Jam.M == Jam.M 
-    && InfoHeadQue(Customer).Jam.S == Jam.S)
-    {
-        DelQue(&Customer, &buang);
-        life--;
-    }
-
-    /* Life Habis */
-    if(life == 0)
-    {
-        printCredit(money);
-        exit(0);
+    while (!IsEmptyQue(Customer) && InfoHeadQue(Customer).Jam.H == Jam.H && InfoHeadQue(Customer).Jam.M == Jam.M 
+        && InfoHeadQue(Customer).Jam.S == Jam.S){
+            DelQue(&Customer, &buang);
+        life--;    
+        /* Life Habis */
+        if(life == 0)
+        {
+            printCredit(money);
+            exit(0);
+        }
     }
 
     cetaktunggumenu();
     printf("\n");
     caricustmarah();
+    printHand(Tangan);
 }
 
 void checkLoad(){
