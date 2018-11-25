@@ -104,7 +104,7 @@ boolean IsAdaDuaQue(Queue Q){
 }
 
 void Del2Que (Queue * Q, infotypeQue *X){
-	address idx;
+	address idx=0;
 	while((*Q).T[idx].id != 2){
 		if(idx == MaxElQue(*Q))
 			idx = 1;

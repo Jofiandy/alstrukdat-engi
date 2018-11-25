@@ -23,25 +23,17 @@ IdxType GetFirstIdx (TabChar T)
     return IdxMin;
 }
 
-// ElType GetFirstElmt (TabChar T)
-// {
-//     return Elmt(T, IdxMin);
-// }
 
 IdxType GetLastIdx (TabChar T)
 {
     return Neff(T);
 }
 
-// ElType GetLastElmt (TabChar T)
-// {
-//     return Elmt(T, Neff(T));
-// }
-
 boolean IsEmptyArr (TabChar T)
 {
     return (NbElmt(T) == 0);
 }
+
 boolean IsFullArr (TabChar T)
 {
     return (GetLastIdx(T) == MaxNbEl(T));
