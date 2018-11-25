@@ -783,7 +783,7 @@ void readKey(){
 
 void printResep(){
     PrintTree(treemakanan,1);
-
+    printf("-----Press Space to Back-----");
 }
 
 void printOption(){
