@@ -1,7 +1,7 @@
 ### ##### ###
 #T         T#
-#L   SPG   Y#
+#T   SPG   P#
 #N         R#
-#A         O#
-#  EKICHBK  #
+#A         S#
+#  SEPCSBK  #
 #############.

@@ -30,14 +30,19 @@ const char *opt[] = {" New Game"," Start   "," Load    "," Exit    "};
 int state, option;
 char name[100], name_load[100];
 
+Infotype arrmenu[8] = {"Banana Split", "Sundae", "Nasi telur dadar", "Nasi Ayam Goreng", "Burger", "Hot Dog", 
+                            "Spaghetti Carbonara", "Spaghetti Bolognese"};
+
+infotypeQue tunggumenu[12];
 int meja[15];
 int current_room;
 MATRIKS room[5], gameRoom;
 POINT p_pos;
 Waktu Jam;
 Queue Customer;
+Queue Duduk;
 graph g;
-int life = 300;
+int life = 30;
 int money = 0;
 Stack Tangan;
 
@@ -63,8 +68,18 @@ void displayCustomer(){
     printLine();    
     printf("Jumlah Antrian: %d \n", NBElmtQue(Customer));
     PrintQue(Customer);
+    PrintStack(Tangan);
 }
 
+void cetaktunggumenu(){
+    printf("List Customer yang menunggu menu : \n");
+    for(int i = 1;i<=10;i++){
+        if(tunggumenu[i].id != 0){
+            printf("%d      %s     ",i,arrmenu[tunggumenu[i].id]);
+            TulisWaktuKesabaran(tunggumenu[i].Jam);
+        }
+    }
+}
 void updateCustomer(int number)
 {
     infotypeQue orang;
@@ -104,7 +119,14 @@ void newSave(){
 }
 
 void firstSetup(){
+    CreateEmpty(&Tangan);
+    BuildTree(&treemakanan);
     for (int i = 0; i < 15; ++i) meja[i] = 0;
+    for (int i = 0; i <= 10; ++i)
+    {
+        tunggumenu[i].id = 0;
+        CreateStart(&tunggumenu[i].Jam);
+    }
     emptyString(name);
     state = STATE_MENU;
     option = OPTION_NEW;
@@ -184,69 +206,151 @@ int noMeja (int X, int Y) {
     else if (X==9 && Y==4 && current_room==3) return 10;
 }
 
-char ambilbahanmakanan(){
-    char ret = '-';
-    //bawah
-    if ((Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos)) != ' ') &&
-        Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos)) != '#'){
-        ret = Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos))
+void caricustmarah(){
+    for(int i = 1;i<=10;i++){
+        if (tunggumenu[i].id != 0 && tunggumenu[i].Jam.H == Jam.H && tunggumenu[i].Jam.M == Jam.M 
+            && tunggumenu[i].Jam.S == Jam.S)
+            {
+                tunggumenu[i].id = 0;
+                meja[i] = 0;
+                life--;
+            }
+
+            /* Life Habis */
+            if(life == 0)
+            {
+                printCredit(money);
+                exit(0);
+        }
     }
-    //atas
-    else if ((Elmt(gameRoom, Absis(p_pos) - 1, Ordinat(p_pos)) != ' ') &&
-        Elmt(gameRoom, Absis(p_pos) -1, Ordinat(p_pos)) != '#'){
-        ret = Elmt(gameRoom, Absis(p_pos) -1 1, Ordinat(p_pos))
-    }
-    //kanan
-    else if ((Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != ' ') &&
-        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != '#'){
-        ret = Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1)
-    }
-    //kiri
-    else if ((Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != ' ') &&
-        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != '#'){
-        ret = Elmt(gameRoom, Absis(p_pos) + 1, Ordinat(p_pos))
-    }
-    return ret;
 }
 
 void taruhCustomer(int n) {
     // n jumlah kursi di meja
     infotypeQue buang;
+    int nomermeja;
+    Waktu jamtmp;
+    jamtmp = Jam;
+    UpDate(&jamtmp,30); 
     if (InfoHeadQue(Customer).id <= n && n==2) {
         if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') {
-            meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos))] = 2;
+            nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos));
+            meja[nomermeja] = 2;
         } else {
-            meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos))] = 2;
+            nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos));
+            meja[nomermeja] = 2;
         }
         DelQue(&Customer, &buang);
+        tunggumenu[nomermeja].id = rand()%8;
+        tunggumenu[nomermeja].Jam = jamtmp;
     } else if (InfoHeadQue(Customer).id <= n) {
         if (InfoHeadQue(Customer).id == 2) {
             if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1);
+                meja[nomermeja] = 2;
             } else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 2;
             } else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 2;
             } else {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1)] = 2;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1);
+                meja[nomermeja] = 2;
             }
+
         } else {
             if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)+1,Ordinat(p_pos)+1);
+                meja[nomermeja] = 4;
             } else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 4;
             } else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1);
+                meja[nomermeja] = 4;
             } else {
-                meja[noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1)] = 4;
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1);
+                meja[nomermeja] = 4;
             }
         }
+        tunggumenu[nomermeja].id = rand()%8;
+        tunggumenu[nomermeja].Jam = jamtmp;
         DelQue(&Customer, &buang);
     } else {
         // untuk yang antrian terdepan tidak cukup tapi di belakang ada yang cukup
-        
+        // infohead == 4 kursi 2
+        if (IsAdaDuaQue(Customer)) {
+            if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') {
+                nomermeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos));
+                meja[nomermeja] = 2;
+            } else {
+                nomermeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos));
+                meja[nomermeja] = 2;
+            }
+            tunggumenu[nomermeja].id = rand()%8;
+            tunggumenu[nomermeja].Jam = jamtmp;
+            Del2Que(&Customer, &buang);
+        }
     }
+}
 
+void klasifikasibahan(char c, Infotype res){
+    if (c == 'T') strcpy(res, "Tray");
+    else if (c == 'L') strcpy(res, "Telur");
+    else if (c == 'S') strcpy(res, "Sendok");
+    else if (c == 'P') strcpy(res, "Piring");
+    else if (c == 'G') strcpy(res, "Garpu");
+    else if (c == 'Y') strcpy(res, "Patty");
+    else if (c == 'N') strcpy(res, "Nasi");
+    else if (c == 'R') strcpy(res, "Roti");
+    else if (c == 'A') strcpy(res, "Ayam Goreng");
+    else if (c == 'O') strcpy(res, "Sosis");
+    else if (c == 'E') strcpy(res, "Stroberi");
+    else if (c == 'K') strcpy(res, "Es Krim");
+    else if (c == 'I') strcpy(res, "Pisang");
+    else if (c == 'C' ) strcpy(res, "Carbonara");
+    else if (c == 'H') strcpy(res, "Spaghetti");
+    else if (c == 'B') strcpy(res, "Bolognese");
+    else if (c == 'K') strcpy(res, "Keju");
+}
+
+int lastbahan(Infotype bahan){
+    int ibahan = cariIndeks(bahan);
+    addrNode nbahan = AlokNode(ibahan);
+    int res = -1;
+    for (int i = 0; i < 8 && res == -1 ; i++){
+        Infotype tmp;
+        strcpy(tmp, arrmenu[i]);
+        int itmp = cariIndeks(tmp);
+        addrNode ntmp = AlokNode(itmp);
+        if (isparent(treemakanan, nbahan, ntmp)){
+            res =  i;
+        }
+    }
+    return res;
+}
+
+char ambilbahanmakanan(){
+    //atas
+    char ret = '-';
+    if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos));
+    //kanan
+    else if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)+1);
+    //bawah
+    else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos));
+    //kiri
+    else if (Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != ' ' && 
+        Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1) != '#')
+            ret = Elmt(gameRoom, Absis(p_pos), Ordinat(p_pos)-1);
+
+    return ret;
 }
 
 void keyGame(char key){
@@ -273,28 +377,53 @@ void keyGame(char key){
             if (kursiKosong()) {
                 // taruh customer nb: meja pasti kosong.
                 int n = kursiKosong();
-                taruhCustomer(n);
-            } else //if (!isWrongplace(p_pos)) {
-            {    // taruh makanan
-
+                if (!IsEmptyQue(Customer)) taruhCustomer(n);
+            } else {
+                // taruh makanan
             }
-
-        }
+        } 
         // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan
         else {
-            char bahanmakanan = ambilbahanmakanan();
-            if (bahanmakanan != '-'){
+            char bahan = ambilbahanmakanan();
+            if (bahan != '-'){
                 //kasih ke tray, akan ada dua opsi:
                 //1. simpen makanan jadinya di tray
                 //2. ambil tray nya langsung anterin
-                if (bahanmakanan == 'T') {
+                if (bahan == 'T') {
 
                 }
                 else {
-                    
+                    Infotype bahanmakanan;
+                    klasifikasibahan(bahan, bahanmakanan);
+                    if (IsEmptySta(Tangan)){
+                        Push(&Tangan, bahanmakanan);
+                    }
+                    else {
+                        Infotype toptangan;
+                        strcpy(toptangan, InfoTop(Tangan));
+                        int itoptangan = cariIndeks(toptangan);
+                        addrNode tmp1 = AlokNode(itoptangan);
+
+                        int inow = cariIndeks(bahanmakanan);
+                        addrNode tmp2 = AlokNode(inow);
+                        
+                        //path for finding the food
+                        if (isparent(treemakanan, tmp1, tmp2)){
+                            Push(&Tangan, bahanmakanan);
+                            //food is ready, food is on the chef hand's
+                            if (lastbahan(bahanmakanan) != -1) {
+                                Infotype thefood;
+                                strcpy(thefood,arrmenu[lastbahan(bahanmakanan)]);
+                                while (!IsEmptySta(Tangan)){
+                                    Infotype toptmp;
+                                    Pop(&Tangan, &toptmp);
+                                }
+                                Push(&Tangan, thefood);
+                            }
+                        }
+                    }
                 }
             }
-            /* tidak ambil apa-apa */
         }
     } else if (key == 'q'){
         printCredit(money);
@@ -395,7 +524,10 @@ void printGame(){
         printCredit(money);
         exit(0);
     }
+
+    cetaktunggumenu();
     printf("\n");
+    caricustmarah();
 }
 
 void checkLoad(){

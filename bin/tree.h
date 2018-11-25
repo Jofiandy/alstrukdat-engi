@@ -8,7 +8,7 @@
 #include "stack.h"
 
 
-#define Nil NULL
+#define Niil NULL
 
 typedef int infotype;
 
@@ -39,9 +39,9 @@ void BuildTree(BinTree *P);
 /* Manajemen Memory */
 addrNode AlokNode(infotype X);
 /* Mengirimkan addrNode hasil alokasi sebuah elemen */
-/* Jika alokasi berhasil, maka addrNode tidak Nil, dan misalnya menghasilkan P, 
-  maka Akar(P) = X, Left(P) = Nil, Right(P)=Nil */
-/* Jika alokasi gagal, mengirimkan Nil */
+/* Jika alokasi berhasil, maka addrNode tidak Niil, dan misalnya menghasilkan P, 
+  maka Akar(P) = X, Left(P) = Niil, Right(P)=Niil */
+/* Jika alokasi gagal, mengirimkan Niil */
 
 void DealokNode(addrNode P);
 /* I.S. P terdefinisi */
@@ -74,7 +74,10 @@ boolean isada(BinTree P, infotype X);
 int carikedalaman(BinTree Pohon, int depth, int indeks);
 
 /*fungsi untuk mengecek apakah X parent dari Y atau bukan */
-boolean isparent(BinTree X, BinTree Y);
+boolean isparent(BinTree Now, BinTree X, BinTree Y);
+
+/*fungsi untuk mengecek apakah suatu makanan adalah leave dari tree atau bukan */
+boolean isjadimakanan(Infotype bahan);
 
 
 #endif
