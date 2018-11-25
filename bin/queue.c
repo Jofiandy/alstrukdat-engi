@@ -45,14 +45,9 @@ void CreateEmptyQue (Queue * Q, int Max){
 /* Jika alokasi berhasil, Tabel memori dialokasi berukuran Max+1 */
 /* atau : jika alokasi gagal, Q kosong dg MaxEl=0 */
 /* Proses : Melakukan alokasi, membuat sebuah Q kosong */
-	(*Q).T = (infotypeQue *) malloc ((Max+1) * sizeof(infotypeQue));
-	if ((*Q).T != NULL) {
-		MaxElQue(*Q) = Max;
-		HeadQue(*Q) = Nil;
-		TailQue(*Q) = Nil;
-	} else /* alokasi gagal */ {
-		MaxElQue(*Q) = 0;
-	}
+	MaxElQue(*Q) = Max;
+	HeadQue(*Q) = Nil;
+	TailQue(*Q) = Nil;
 }
 /* *** Destruktor *** */
 void DeAlokasiQue(Queue * Q){
@@ -60,7 +55,6 @@ void DeAlokasiQue(Queue * Q){
 /* I.S. Q pernah dialokasi */
 /* F.S. Q menjadi tidak terdefinisi lagi, MaxEl(Q) diset 0 */
 	MaxElQue(*Q) = 0;
-	free((*Q).T); 
 }
 /* *** Primitif Add/Delete *** */
 void AddQue (Queue * Q, infotypeQue X){
