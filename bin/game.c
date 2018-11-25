@@ -3,8 +3,8 @@
 #include<stdlib.h>
 
 // [!] comment out one of these depending on your OS
-//#include "key_linux/key.h"
-#include "key_windows/key.h"
+#include "key_linux/key.h"
+//#include "key_windows/key.h"
 
 #include "matriks/matriks.h"
 #include "point/point.h"
