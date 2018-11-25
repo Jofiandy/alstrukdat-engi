@@ -45,7 +45,7 @@ graph g;
 int life = 30;
 int money = 0;
 Stack Tangan, Tray;
-
+boolean useTray = false;
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
         s[i] = 0;
@@ -144,6 +144,12 @@ void printGameOver(){
   printf("\t\t\t  -------- -------|    |    |-----|        --------     |   |----||    -|\n\n\n");
 }
 
+void printThank(){
+    printf("\n\t\t\t\t----- .    .  ----  |   | |  |     |   |  ----  |   |\n");
+    printf("\t\t\t\t  |   |----| |----| | | | |||        |   |    | |   |\n");
+    printf("\t\t\t\t  |   |    | |    | |  || |  |       |    ----   ---\n");
+}
+
 void printCreditCreator(int money){
     printf("\t\t\t\t\t\tThanks for playing with us!\n");
     printf("\t\t\t\t\t\tYour Score is %d. Not bad!\n",money);
@@ -158,11 +164,6 @@ void printCreditCreator(int money){
     printf("\t\t\t\t\t\t      Winston Wijaya\n\n");
 }
 
-printThank(){
-    printf("\n\t\t\t\t----- .    .  ----  |   | |  |     |   |  ----  |   |\n");
-    printf("\t\t\t\t  |   |----| |----| | | | |||        |   |    | |   |\n");
-    printf("\t\t\t\t  |   |    | |    | |  || |  |       |    ----   ---\n");
-}
 
 void printCredit(int money){
     clrscr();
@@ -295,6 +296,29 @@ void taruhCustomer(int n) {
     }
 }
 
+void taruhMakan() {
+    int tempMeja;
+    if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == 'M') tempMeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos));
+    else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)) == 'M') tempMeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos));
+    else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)+1) == 'M') tempMeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos)+1);
+    else if (Elmt(gameRoom, Absis(p_pos)+1, Ordinat(p_pos)-1) == 'M') tempMeja = noMeja(Absis(p_pos)+1, Ordinat(p_pos)-1);
+    else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)-1) == 'M') tempMeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)-1);
+    else if (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)+1) == 'M') tempMeja = noMeja(Absis(p_pos)-1, Ordinat(p_pos)+1);
+
+    Infotype tempMakanan;
+    if (!IsEmptySta(Tray)){
+        strcpy(tempMakanan, InfoTop(Tray));
+        if (strcmp(tempMakanan, arrmenu[tunggumenu[tempMeja].id])==0 && useTray) {
+            //ilangin
+            Infotype X;
+            Pop(&Tray, &X);
+            tunggumenu[tempMeja].id = 0;
+            meja[tempMeja] = 0;
+            money += keuntungan(treemakanan, tempMakanan);
+        }
+    }
+}
+
 void klasifikasibahan(char c, Infotype res){
     if (c == 'T') strcpy(res, "Tray");
     else if (c == 'L') strcpy(res, "Telur");
@@ -371,6 +395,20 @@ void keyGame(char key){
         UpDate(&Jam,1);
         updateCustomer(1);
         Ordinat(p_pos)--;
+    } 
+    else if (key == 'b' || key == 'B') {
+        while (!IsEmptySta(Tangan)){
+            Infotype X;
+            Pop(&Tangan, &X);
+        }
+    }
+    else if(key == 't' || key == 'T'){
+        if(useTray){
+            while(!IsEmptySta(Tray)){
+                Infotype food_buang;
+                Pop(&Tray,&food_buang);
+            }
+        }
     } else if (key == KEY_SPACE) {
         UpDate(&Jam, 1);
         // meja
@@ -378,9 +416,13 @@ void keyGame(char key){
             if (kursiKosong()) {
                 // taruh customer nb: meja pasti kosong.
                 int n = kursiKosong();
-                if (!IsEmptyQue(Customer)) taruhCustomer(n);
+                if (!IsEmptyQue(Customer)) {
+                    taruhCustomer(n);
+                    UpDate(&Jam,1);
+                }
             } else {
                 // taruh makanan
+                taruhMakan();
             }
         } 
         // tidak ada meja, berarti lagi di dapur mau ambil bahan makanan / menaruh makanan di tray
@@ -391,41 +433,47 @@ void keyGame(char key){
                 //1. simpen makanan jadinya di tray
                 //2. ambil tray nya langsung anterin
                 if (bahan == 'T') {
-                    if (!IsEmptySta(Tangan)) {
-                        if (NbElmtSt(Tray) < 5) {
-                            Infotype food_jadi;
-                            Pop(&Tangan, &food_jadi);
-                            Push(&Tray, food_jadi);
+                    if (useTray) useTray = false;
+                    else {
+                        if (IsEmptySta(Tangan)) useTray = true;
+                        if (!IsEmptySta(Tangan)) {
+                            if (NbElmtSt(Tray) < 5) {
+                                Infotype food_jadi;
+                                Pop(&Tangan, &food_jadi);
+                                Push(&Tray, food_jadi);
+                            }
                         }
                     }
                 }
                 else {
                     Infotype bahanmakanan;
                     klasifikasibahan(bahan, bahanmakanan);
-                    if (IsEmptySta(Tangan)){
-                        Push(&Tangan, bahanmakanan);
-                    }
-                    else {
-                        Infotype toptangan;
-                        strcpy(toptangan, InfoTop(Tangan));
-                        int itoptangan = cariIndeks(toptangan);
-                        addrNode tmp1 = AlokNode(itoptangan);
-
-                        int inow = cariIndeks(bahanmakanan);
-                        addrNode tmp2 = AlokNode(inow);
-                        
-                        //path for finding the food
-                        if (isparent(treemakanan, tmp1, tmp2)){
+                    if (!useTray){ 
+                        if (IsEmptySta(Tangan) && bahan == 'P'){
                             Push(&Tangan, bahanmakanan);
-                            //food is ready, food is on the chef hand's
-                            if (lastbahan(bahanmakanan) != -1) {
-                                Infotype thefood;
-                                strcpy(thefood,arrmenu[lastbahan(bahanmakanan)]);
-                                while (!IsEmptySta(Tangan)){
-                                    Infotype toptmp;
-                                    Pop(&Tangan, &toptmp);
+                        }
+                        else {
+                            Infotype toptangan;
+                            strcpy(toptangan, InfoTop(Tangan));
+                            int itoptangan = cariIndeks(toptangan);
+                            addrNode tmp1 = AlokNode(itoptangan);
+
+                            int inow = cariIndeks(bahanmakanan);
+                            addrNode tmp2 = AlokNode(inow);
+                            
+                            //path for finding the food
+                            if (isparent(treemakanan, tmp1, tmp2)){
+                                Push(&Tangan, bahanmakanan);
+                                //food is ready, food is on the chef hand's
+                                if (lastbahan(bahanmakanan) != -1) {
+                                    Infotype thefood;
+                                    strcpy(thefood,arrmenu[lastbahan(bahanmakanan)]);
+                                    while (!IsEmptySta(Tangan)){
+                                        Infotype toptmp;
+                                        Pop(&Tangan, &toptmp);
+                                    }
+                                    Push(&Tangan, thefood);
                                 }
-                                Push(&Tangan, thefood);
                             }
                         }
                     }
@@ -443,6 +491,7 @@ void printHand(Stack S){
     printLine();
     printf("Hand:\n");
     PrintStack(S);
+    if (useTray) printf("You also bring the tray\n");
 }
 
 void printTray(Stack S){
