@@ -46,6 +46,67 @@ int life = 30;
 int money = 0;
 Stack Tangan, Tray;
 boolean useTray = false;
+
+struct savedata {
+    infotypeQue tunggumenu[12];
+	int meja[15];
+	int current_room;
+	MATRIKS room[5], gameRoom;
+	POINT p_pos;
+	Waktu Jam;
+	Queue Customer;
+	Queue Duduk;
+	graph g;
+	int life;
+	int money;
+	Stack Tangan, Tray;
+	boolean useTray;
+};
+
+void saveGame(){
+	
+	char *path = "./savedata/";
+    char fname[105];
+    strcpy(fname, path);
+    strcat(fname, name);
+    strcat(fname, ".engi");
+	
+	FILE *outfile;
+	outfile = fopen(fname, "w");
+	if (outfile == NULL){
+		fprintf(stderr, "\nError opening file\n");
+		exit(1);
+	}
+	
+	struct savedata s;
+	for (int i = 0; i < 12; i++) s.tunggumenu[i] = tunggumenu[i];
+	for (int i = 0; i < 15; i++) s.meja[i] = meja[i];
+	s.current_room = current_room;
+	for (int i = 0; i < 5; i++) s.room[i] = room[i];
+	s.gameRoom = gameRoom;
+	s.p_pos = p_pos;
+	s.Jam = Jam;
+	s.Customer = Customer;
+	s.Duduk = Duduk;
+	s.g = g;
+	s.life = life;
+	s.money = money;
+	s.Tangan = Tangan;
+	s.Tray = Tray;
+	s.useTray = useTray;
+	
+	fwrite(&s, sizeof(struct savedata), 1, outfile);
+	if(fwrite != 0)  
+		printf("Contents to file written successfully!\n"); 
+	else 
+		printf("Error writing file!\n"); 
+	fclose(outfile);
+	printf("Game saved to: %s\n", fname);
+	printf("Load the game by inputting the player name as %s\n", name);
+	printf("Press any key to continue the game..."); getKey();
+	
+}
+
 void emptyString(char* s){
     for (int i = 0; i < 100; i++)
         s[i] = 0;
@@ -379,6 +440,10 @@ char ambilbahanmakanan(){
 
 void keyGame(char key){
     
+	if (key == 's'){
+		saveGame("asd.dat");
+	}
+	
     if (key == KEY_UP && (Elmt(gameRoom, Absis(p_pos)-1, Ordinat(p_pos)) == ' ')){  
         UpDate(&Jam,1);
         updateCustomer(1);
@@ -599,7 +664,7 @@ void printGame(){
 }
 
 void checkLoad(){
-    FILE *file;
+    FILE *infile;
     
     char *path = "./savedata/";
     char fname[105];
@@ -607,10 +672,35 @@ void checkLoad(){
     strcat(fname, name_load);
     strcat(fname, ".engi");
     
-    if (file = fopen(fname, "r")){
-        // TODO - Overwrite/load savegame data with file
-        fclose(file);
+    if (infile = fopen(fname, "r")){
+		
+		if (infile == NULL){
+			fprintf(stderr, "\nError opening file\n");
+			exit(1);
+		}
+		
+		struct savedata s;
+		fread(&s, sizeof(struct savedata), 1, infile);
+		
+		for (int i = 0; i < 12; i++) tunggumenu[i] = s.tunggumenu[i];
+		for (int i = 0; i < 15; i++) meja[i] = s.meja[i];
+		current_room = s.current_room;
+		for (int i = 0; i < 5; i++) room[i] = s.room[i];
+		gameRoom = s.gameRoom;
+		p_pos = s.p_pos;
+		Jam = s.Jam;
+		Customer = s.Customer;
+		Duduk = s.Duduk;
+		g = s.g;
+		life = s.life;
+		money = s.money;
+		Tangan = s.Tangan;
+		Tray = s.Tray;
+		useTray = s.useTray;
+		
+		fclose(infile);
         strcpy(name, name_load);
+		
         state = STATE_MENU;
     } else 
         strcpy(name_load, not_found);

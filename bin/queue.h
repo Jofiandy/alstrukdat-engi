@@ -8,6 +8,7 @@
 #include "jam.h"
 
 #define Nil 0
+#define IdxMaxQue 20
 /* Konstanta untuk mendefinisikan address tak terdefinisi */
 
 /* Definisi elemen dan address */
@@ -24,7 +25,7 @@ typedef struct { int id;
 				
 typedef queCustomer infotypeQue;
 
-typedef struct { infotypeQue * T;   /* tabel penyimpan elemen */
+typedef struct { infotypeQue T[IdxMaxQue+1];   /* tabel penyimpan elemen */
                  address HEAD;  /* alamat penghapusan */
                  address TAIL;  /* alamat penambahan */
                  int MaxEl;     /* Max elemen queue */
@@ -70,6 +71,8 @@ void DelQue (Queue * Q, infotypeQue * X);
 /* I.S. Q tidak mungkin kosong */
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer; 
         Q mungkin kosong */
+		
+void Del2Que (Queue * Q, infotypeQue *X);
 
 void TulisFileQue (Queue Q,FILE *f);
 		
