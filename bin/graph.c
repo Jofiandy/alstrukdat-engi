@@ -1,7 +1,7 @@
 #include "graph.h"
 #include "point.h"
-#include<stdlib.h>
-#include<stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void initTp(graph * g, char * source){
 	FILE * gf = fopen(source,"r");
