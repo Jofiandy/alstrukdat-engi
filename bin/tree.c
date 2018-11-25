@@ -7,6 +7,9 @@ Infotype arrmakanan[30] = {"Piring", "Sendok", "Garpu", "Es Krim", "Nasi", "Roti
                             "Stroberi", "Telur", "Ayam Goreng", "Patty", "Sosis", "Bolognese", "Carbonara",
                             "Banana Split", "Sundae", "Nasi telur dadar", "Nasi Ayam Goreng", "Burger", "Hot Dog", 
                             "Keju", "Spaghetti Carbonara", "Spaghetti Bolognese"};  
+char istilahmakanan[30] = {'P', 'S', 'G', 'K', 'N', 'R', 'H', 'I', 'E', 'L', 'A', 'Y'
+                            ,'O','B','C','-','-','-','-','-','-','K','-','-'};
+
 
 void buatTree(BinTree parent,BinTree l, BinTree r){
     Left(parent) = l;
@@ -179,7 +182,11 @@ boolean isjadimakanan(Infotype bahan){
 
 void DummyPrintTree(BinTree P, int h, int hc){
     if (!IsTreeEmpty(P)){
-        printf("%s\n", arrmakanan[Akar(P)]);
+        char tmpch = istilahmakanan[Akar(P)];
+        if (tmpch == '-')
+            printf("%s\n", arrmakanan[Akar(P)]);
+        else 
+            printf("%s(%c)\n", arrmakanan[Akar(P)], tmpch);
         if (!IsTreeEmpty(Left(P))){
             for (int i = 0; i < h; i++)
                 printf(" ");

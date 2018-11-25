@@ -18,6 +18,7 @@
 #define STATE_NAME 1
 #define STATE_LOAD 2
 #define STATE_GAME 3
+#define STATE_RESEP 4
 
 #define OPTION_NEW 0
 #define OPTION_START 1
@@ -74,7 +75,7 @@ void cetaktunggumenu(){
     printLine();
     printf("List Customer yang menunggu menu : \n");
     for(int i = 1;i<=10;i++){
-        if(tunggumenu[i].id != 0){
+        if(tunggumenu[i].id != -1){
             printf("%d      %s     ",i,arrmenu[tunggumenu[i].id]);
             TulisWaktuKesabaran(tunggumenu[i].Jam);
         }
@@ -124,7 +125,7 @@ void firstSetup(){
     for (int i = 0; i < 15; ++i) meja[i] = 0;
     for (int i = 0; i <= 10; ++i)
     {
-        tunggumenu[i].id = 0;
+        tunggumenu[i].id = -1;
         CreateStart(&tunggumenu[i].Jam);
     }
     emptyString(name);
@@ -209,10 +210,10 @@ int noMeja (int X, int Y) {
 
 void caricustmarah(){
     for(int i = 1;i<=10;i++){
-        if (tunggumenu[i].id != 0 && tunggumenu[i].Jam.H == Jam.H && tunggumenu[i].Jam.M == Jam.M 
+        if (tunggumenu[i].id != -1 && tunggumenu[i].Jam.H == Jam.H && tunggumenu[i].Jam.M == Jam.M 
             && tunggumenu[i].Jam.S == Jam.S)
             {
-                tunggumenu[i].id = 0;
+                tunggumenu[i].id = -1;
                 meja[i] = 0;
                 life--;
             }
@@ -312,7 +313,7 @@ void taruhMakan() {
             //ilangin
             Infotype X;
             Pop(&Tray, &X);
-            tunggumenu[tempMeja].id = 0;
+            tunggumenu[tempMeja].id = -1;
             meja[tempMeja] = 0;
             money += keuntungan(treemakanan, tempMakanan);
         }
@@ -480,6 +481,8 @@ void keyGame(char key){
                 }
             }
         }
+    } else if (key == 'r'){
+        state = STATE_RESEP;
     } else if (key == 'q'){
         printCredit(money);
         exit(0);
@@ -681,7 +684,16 @@ void readKey(){
         case STATE_GAME:
             keyGame(key);
             break;
+        case STATE_RESEP:
+            if(key == KEY_SPACE){
+                state = STATE_GAME;
+            }
     }
+}
+
+void printResep(){
+    PrintTree(treemakanan,1);
+
 }
 
 void printOption(){
@@ -711,6 +723,11 @@ void printOption(){
         case STATE_GAME:
             printf("\n");
             printGame();
+            printf("\n");
+            break;
+        case STATE_RESEP:
+            printf("\n");
+            printResep();
             printf("\n");
             break;
     }
