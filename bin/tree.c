@@ -176,3 +176,23 @@ boolean isjadimakanan(Infotype bahan){
     BinTree tmp = AlokNode(idx);
     return IsTreeOneElmt(tmp);
 }
+
+void DummyPrintTree(BinTree P, int h, int hc){
+    if (!IsTreeEmpty(P)){
+        printf("%s\n", arrmakanan[Akar(P)]);
+        if (!IsTreeEmpty(Left(P))){
+            for (int i = 0; i < h; i++)
+                printf(" ");
+            DummyPrintTree(Left(P), h + hc, hc+1);
+        }
+        if (!IsTreeEmpty(Right(P))){
+            for (int i = 0; i < h; i++)
+                printf(" ");
+            DummyPrintTree(Right(P), h + hc, hc+1);
+        }
+    }
+}
+
+void PrintTree(BinTree P, int h){
+    DummyPrintTree(P, h, 1);
+}
