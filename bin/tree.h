@@ -79,5 +79,8 @@ boolean isparent(BinTree Now, BinTree X, BinTree Y);
 /*fungsi untuk mengecek apakah suatu makanan adalah leave dari tree atau bukan */
 boolean isjadimakanan(Infotype bahan);
 
+void PrintTree(BinTree P, int h);
+
+void DummyPrintTree(BinTree P, int h, int hc);
 
 #endif
