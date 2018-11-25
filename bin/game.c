@@ -826,9 +826,9 @@ void printOption(){
             printf("\n");
             break;
         case STATE_RESEP:
-            printf("\n");
+            printEmpty();
             printResep();
-            printf("\n");
+            printEmpty();
             break;
     }
 }
