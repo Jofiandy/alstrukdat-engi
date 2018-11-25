@@ -3,8 +3,8 @@
 #include<stdlib.h>
 
 // [!] comment out one of these depending on your OS
-//#include "linux/key.h"
-#include "windows/key.h"
+#include "linux/key.h"
+//#include "windows/key.h"
 
 #include "matriks.h"
 #include "point.h"
@@ -120,7 +120,7 @@ void printEmpty(){
 }
 
 void printCenter(char *s) {
-    printf("---%*s%*s---\n",55+strlen(s)/2,s,55-strlen(s)/2,"");
+    printf("---%*s%*s---\n",(int)(55+strlen(s)/2),s,(int)(55-strlen(s)/2),"");
 }
 
 void displayCustomer(){
