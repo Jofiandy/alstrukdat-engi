@@ -1,9 +1,3 @@
-/*	NIM / Nama	: 13517093 / Faiz Muhammad Muflich
-	Nama file 	: point.c
-	Topik		: ADT
-	Tanggal		: 05 September 2018
-	Deskripsi	: Modul pra praktikum ADT point, berisi body file dari ADT point */
-
 #include <math.h>
 #include <stdio.h>
 #include "point.h"
