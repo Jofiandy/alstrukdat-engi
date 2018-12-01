@@ -2,7 +2,7 @@
 
 A command-line strategy and time-management game made with C with game mechanics akin to Diner Dash, where player shall play the role of a waiter who has to receive and serve orders in multiple rooms. Done to fulfill IF2110 Algorithm & Data Structure's Big Mission (or whatever Tugas Besar is called).
 
-## Known Bug
+## Known Bug(s)
 Too lazy to fix, please create a pull request.
 * Can't start a new game after post-game ending.
 * On Linux, moving south when there is an obstacle treats the down arrow button as "B" (i.e. throw on-hand ingredients).
