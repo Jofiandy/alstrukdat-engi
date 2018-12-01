@@ -1,4 +1,4 @@
-# tubes (a.k.a. Engi's Kitchen Expansion)
+# alstrukdat-engi (a.k.a. Engi's Kitchen Expansion)
 
 A command-line strategy and time-management game made with C with game mechanics akin to Diner Dash, where player shall play the role of a waiter who has to receive and serve orders in multiple rooms. Done to fulfill IF2110 Algorithm & Data Structure's Big Mission (or whatever Tugas Besar is called).
 
